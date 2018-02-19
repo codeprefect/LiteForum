@@ -1,0 +1,14 @@
+using System;
+using System.Collections.Generic;
+
+namespace LiteForum.ViewModels
+{
+    public class PostVModel : BaseVModel
+    {
+        public string Content { get; set; }
+        public ICollection<CommentVModel> Comments { get; set; }
+        public int CommentsCount { get; set; }
+        public DateTime? LastCommentAt { get; set; }
+        public string LastCommentBy { get; set; }
+    }
+}

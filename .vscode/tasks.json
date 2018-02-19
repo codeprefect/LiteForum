@@ -1,0 +1,42 @@
+{
+    "version": "2.0.0",
+    "command": "dotnet",
+    "type": "shell",
+    "options": {
+        "env": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+        },
+        "cwd": "${workspaceFolder}/src/LiteForum"
+    },
+    "tasks": [
+        {
+            "label": "build",
+            "args": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "watch",
+            "args": [
+                "run"
+            ],
+            "group": "test",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "update db",
+            "command": "dotnet",
+            "args": [
+                "ef",
+                "database",
+                "update"
+            ],
+            "problemMatcher": [
+                "$msCompile"
+            ]
+        }
+    ]
+}
