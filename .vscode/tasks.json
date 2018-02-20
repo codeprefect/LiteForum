@@ -37,6 +37,18 @@
             "problemMatcher": [
                 "$msCompile"
             ]
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "args": [
+                "publish",
+                "-o",
+                "../../../LiteForumProd"
+            ],
+            "problemMatcher": [
+                "$msCompile"
+            ]
         }
     ]
 }
