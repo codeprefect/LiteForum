@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,14 +24,12 @@ namespace LiteForum
     public class Startup
     {
         private readonly IConfiguration Configuration;
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-        
+
         // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<LiteForumDbContext>(options =>
@@ -83,7 +82,7 @@ namespace LiteForum
             services.AddScoped<IDataService<LiteForumDbContext, Post>, PostService>();
             services.AddScoped<IDataService<LiteForumDbContext, Comment>, CommentService>();
             services.AddScoped<IDataService<LiteForumDbContext, Reply>, ReplyService>();
-
+            
             services.AddMvc();
         }
 
@@ -93,11 +92,27 @@ namespace LiteForum
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                {
+                    HotModuleReplacement = true
+                });
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
             }
 
-            app.Run(async (context) =>
+            app.UseStaticFiles();
+
+            app.UseMvc(routes =>
             {
-                await context.Response.WriteAsync("Hello World!");
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new { controller = "Home", action = "Index" });
             });
         }
     }

@@ -4,20 +4,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SimpleForum.Models;
+using LiteForum.Models;
 
-namespace SimpleForum.Helpers {
+namespace LiteForum.Helpers {
     public static class StartupHelper
     {
         private static RoleManager<IdentityRole> _roleManager;
-        private static UserManager<SimpleForumUser> _userManager;
+        private static UserManager<LiteForumUser> _userManager;
         private static IServiceProvider _serviceProvider;
         private static IConfiguration _configuration;
 
         public static async Task CreateRolesAndAdminUser(IServiceProvider serviceProvider, IConfiguration configuration)
         {
             _roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            _userManager = serviceProvider.GetRequiredService<UserManager<SimpleForumUser>>();
+            _userManager = serviceProvider.GetRequiredService<UserManager<LiteForumUser>>();
             _serviceProvider = serviceProvider;
             _configuration = configuration;
             await CreateRoles();
@@ -44,7 +44,7 @@ namespace SimpleForum.Helpers {
         private static async Task CreateAdminUser()
         {
             //creating an admin user who could maintain the web app
-            var adminUser = new SimpleForumUser
+            var adminUser = new LiteForumUser
             {
                 UserName = _configuration.GetSection("AppSettings")["AdminUsername"],
                 Email = _configuration.GetSection("AppSettings")["AdminEmail"]

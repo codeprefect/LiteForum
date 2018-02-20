@@ -1,4 +1,4 @@
-namespace SimpleForum.Helpers
+namespace LiteForum.Helpers
 {
     public static class AppConstants
     {
