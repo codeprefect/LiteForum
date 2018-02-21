@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map'
 import { appConfig } from '../_helpers/app.config';
 import { Login } from '../_models/login';
 import { Register } from '../_models/register';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthService {
@@ -24,6 +25,13 @@ export class AuthService {
                     this.store.saveCreds(result);
                 }
             });
+    }
+
+    isLoggedIn() {
+        if(this.store.read(appConfig.CURRENT_USER)) {
+            return true;
+        }
+        return false;
     }
 
     logout() {
