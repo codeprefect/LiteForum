@@ -313,4 +313,5 @@ OpenCover/
 *wwwroot/lib
 *.Development.*
 *.min.*
+**/[Pp]roduction
 

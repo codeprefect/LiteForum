@@ -37,6 +37,23 @@
             "problemMatcher": [
                 "$msCompile"
             ]
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "args": [
+                "publish",
+                "-o",
+                "production"
+            ],
+            "options": {
+                "env": {
+                    "ASPNETCORE_ENVIRONMENT": "Production"
+                },
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ]
         }
     ]
 }

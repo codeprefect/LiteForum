@@ -17,14 +17,14 @@
                         <span class='glyphicon glyphicon-home'></span> Home
                     </a>
                 </li>
-                <li [routerLinkActive]="['link-active']">
-                    <a [routerLink]="['/counter']">
-                        <span class='glyphicon glyphicon-education'></span> Counter
+                <li *ngIf="!isLoggedIn()" [routerLinkActive]="['link-active']">
+                    <a [routerLink]="['/login']">
+                        <span class='glyphicon glyphicon-th-list'></span> Login
                     </a>
                 </li>
-                <li [routerLinkActive]="['link-active']">
-                    <a [routerLink]="['/fetch-data']">
-                        <span class='glyphicon glyphicon-th-list'></span> Fetch data
+                <li *ngIf="isLoggedIn()" [routerLinkActive]="['link-active']">
+                    <a (click)="logout()">
+                        <span class='glyphicon glyphicon-th-list'></span> <button class="btn btn-danger log">Log out</button>
                     </a>
                 </li>
             </ul>
