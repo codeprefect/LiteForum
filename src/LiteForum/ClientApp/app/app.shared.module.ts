@@ -15,6 +15,9 @@ import { AuthGuard } from './_guards/auth.guard';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { StorageService } from './_services/storage.service';
 import { AlertComponent } from './components/alert/alert.component';
+import { PostService } from './_services/post.service';
+import { CommentService } from './_services/comment.service';
+import { ReplyService } from './_services/reply.service';
 
 @NgModule({
     declarations: [
@@ -41,6 +44,9 @@ import { AlertComponent } from './components/alert/alert.component';
         AuthGuard,
         AlertService,
         AuthService,
+        PostService,
+        CommentService,
+        ReplyService,
         StorageService,
         {
             provide: HTTP_INTERCEPTORS,
