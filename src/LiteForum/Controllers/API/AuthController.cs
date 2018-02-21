@@ -89,15 +89,19 @@ namespace LiteForum.Controllers
 
                         return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token), expiration = token.ValidTo });
                     }
-                    else return Ok(new
-                    {
-                        message = "token generation failed",
-                        reason = "invalid login credentials"
-                    });
                 }
+                else return BadRequest(new
+                {
+                    StatusCode = 400,
+                    Message = "invalid login credentials"
+                });
             }
 
-            return BadRequest("Could not create token");
+            return BadRequest(new
+            {
+                StatusCode = 400,
+                Message = "request object is not a valid credential"
+            });
         }
 
         private async Task<List<Claim>> GetValidClaims(LiteForumUser user) {

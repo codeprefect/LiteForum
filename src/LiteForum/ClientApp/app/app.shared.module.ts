@@ -14,11 +14,13 @@ import { AlertService } from './_services/alert.service';
 import { AuthGuard } from './_guards/auth.guard';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { StorageService } from './_services/storage.service';
+import { AlertComponent } from './components/alert/alert.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         NavMenuComponent,
+        AlertComponent,
         HomeComponent,
         LoginComponent,
         RegisterComponent
