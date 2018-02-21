@@ -39,7 +39,7 @@ namespace LiteForum.Controllers.API
             catch (Exception e)
             {
                 _logger.LogError($"Failed to fetch posts due to {e.Message ?? e.InnerException.Message}");
-                return BadRequest(e);
+                return BadRequest(e.ToResponse(500));
             }
         }
 
@@ -60,7 +60,7 @@ namespace LiteForum.Controllers.API
             catch (Exception e)
             {
                 _logger.LogError($"failed to get post with id: {id}, due to {e.Message ?? e.InnerException.Message}");
-                return BadRequest(e);
+                return BadRequest(e.ToResponse(500));
             }
         }
 
@@ -81,7 +81,7 @@ namespace LiteForum.Controllers.API
             catch(Exception e)
             {
                 _logger.LogError($"post creation by {UserId} failed due to {e.Message ?? e.InnerException.Message}");
-                return BadRequest(e);
+                return BadRequest(e.ToResponse(500));
             }
         }
 
@@ -106,14 +106,14 @@ namespace LiteForum.Controllers.API
             catch (Exception e)
             {
                 _logger.LogError($"post modification by {UserId} failed due to {e.Message ?? e.InnerException.Message}");
-                return BadRequest(e);
+                return BadRequest(e.ToResponse(500));
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            if(id <= 0) return BadRequest("submitted id: ${id} is invalid");
+            if(id <= 0) return BadRequest(new LiteForumResponseMessage(500, $"submitted id: {id} is invalid"));
 
             try
             {
@@ -122,12 +122,12 @@ namespace LiteForum.Controllers.API
                 _posts.Delete(id);
                 await _posts.SaveAsync();
                 _logger.LogInformation($"User: {UserId} deleted his post with id: {id}");
-                return Ok(post.ToVModel());
+                return Ok(new LiteForumResponseMessage(200, "deleted successfully"));
             }
             catch (Exception e)
             {
                 _logger.LogError($"post deletion by {UserId} failed due to {e.Message ?? e.InnerException.Message}");
-                return BadRequest(e);
+                return BadRequest(e.ToResponse(500));
             }
         }
     }

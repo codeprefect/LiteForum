@@ -39,7 +39,7 @@ namespace LiteForum.Controllers.API
             catch (Exception e)
             {
                 _logger.LogError($"Failed to fetch replies due to {e.Message ?? e.InnerException.Message}");
-                return BadRequest(e);
+                return BadRequest(e.ToResponse(500));
             }
         }
 
@@ -59,7 +59,7 @@ namespace LiteForum.Controllers.API
             catch (Exception e)
             {
                 _logger.LogError($"failed to get reply with id: {id}, due to {e.Message ?? e.InnerException.Message}");
-                return BadRequest(e);
+                return BadRequest(e.ToResponse(500));
             }
         }
 
@@ -81,22 +81,22 @@ namespace LiteForum.Controllers.API
             catch (Exception e)
             {
                 _logger.LogError($"reply creation by {UserId} failed due to {e.Message ?? e.InnerException.Message}");
-                return BadRequest(e);
+                return BadRequest(e.ToResponse(500));
             }
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody]ReplyVModel Reply)
+        public async Task<IActionResult> Update([FromBody]ReplyVModel reply)
         {
             if (!ModelState.IsValid) return BadRequest($"submitted Reply has {ModelState.ErrorCount} errors");
 
             try
             {
-                var oldReply = await _replies.GetByIdAsync(Reply.Id);
+                var oldReply = await _replies.GetByIdAsync(reply.Id);
                 if (oldReply.UserId != UserId) throw new Exception("you do not have write access to this reply");
                 if (oldReply.CommentId != _commentId) throw new Exception("you tried to mangle the system. Thanks");
 
-                oldReply.Content = Reply.Content;
+                oldReply.Content = reply.Content;
                 _replies.Update(oldReply, UserId);
                 await _replies.SaveAsync();
                 _logger.LogInformation($"User: {UserId} modified a his reply {oldReply}");
@@ -105,11 +105,11 @@ namespace LiteForum.Controllers.API
             catch (Exception e)
             {
                 _logger.LogError($"reply modification by {UserId} failed due to {e.Message ?? e.InnerException.Message}");
-                return BadRequest(e);
+                return BadRequest(e.ToResponse(500));
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0) return BadRequest("submitted id: ${id} is invalid");
@@ -128,7 +128,7 @@ namespace LiteForum.Controllers.API
             catch (Exception e)
             {
                 _logger.LogError($"reply deletion by {UserId} failed due to {e.Message ?? e.InnerException.Message}");
-                return BadRequest(e);
+                return BadRequest(e.ToResponse(500));
             }
         }
 
