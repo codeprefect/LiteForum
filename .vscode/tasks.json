@@ -44,7 +44,7 @@
             "args": [
                 "publish",
                 "-o",
-                "production"
+                "../../production"
             ],
             "options": {
                 "env": {

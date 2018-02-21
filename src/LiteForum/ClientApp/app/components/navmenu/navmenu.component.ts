@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 
 @Component({
     selector: 'nav-menu',
-    templateUrl: './navmenu.component.html',
-    styleUrls: ['./navmenu.component.css']
+    templateUrl: './navmenu.component.html'
 })
 export class NavMenuComponent {
     constructor(private auth: AuthService, private router: Router) { }
