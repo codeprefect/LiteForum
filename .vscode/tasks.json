@@ -44,8 +44,13 @@
             "args": [
                 "publish",
                 "-o",
-                "../../../LiteForumProd"
+                "production"
             ],
+            "options": {
+                "env": {
+                    "ASPNETCORE_ENVIRONMENT": "Production"
+                },
+            },
             "problemMatcher": [
                 "$msCompile"
             ]
