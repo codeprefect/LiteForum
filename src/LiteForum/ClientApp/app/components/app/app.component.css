@@ -7,6 +7,7 @@
 
 .body-content {
     padding-top: 100px;
+    background: linear-gradient(to right, rgba(209, 146, 185, 0.9), rgb(187, 198, 228));
 }
 
 li .glyphicon {
@@ -22,7 +23,6 @@ li.link-active a:focus {
     background-color: #F0F0F0;
     color: white;
 }
-
 
 /* Keep the nav menu independent of scrolling and on top of other items */
 
