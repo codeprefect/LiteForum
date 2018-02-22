@@ -18,6 +18,7 @@ import { AlertComponent } from './components/alert/alert.component';
 import { PostService } from './_services/post.service';
 import { CommentService } from './_services/comment.service';
 import { ReplyService } from './_services/reply.service';
+import { CategoryService } from './_services/category.service';
 
 @NgModule({
     declarations: [
@@ -48,6 +49,7 @@ import { ReplyService } from './_services/reply.service';
         CommentService,
         ReplyService,
         StorageService,
+        CategoryService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: JwtInterceptor,

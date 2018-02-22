@@ -88,6 +88,7 @@ namespace LiteForum
             services.AddScoped<IDataService<LiteForumDbContext, Post>, PostService>();
             services.AddScoped<IDataService<LiteForumDbContext, Comment>, CommentService>();
             services.AddScoped<IDataService<LiteForumDbContext, Reply>, ReplyService>();
+            services.AddScoped<IDataService<LiteForumDbContext, Category>, CategoryService>();
             
             services.AddMvc();
         }

@@ -53,7 +53,7 @@ namespace LiteForum.Controllers.API
             try
             {
                 var category = withChild ?
-                    await _categories.GetOneAsync(filter: filter, includeProperties: "Comments") :
+                    await _categories.GetOneAsync(filter: filter, includeProperties: "Posts") :
                     await _categories.GetOneAsync(filter: filter);
                 return Ok(category.ToVModel());
             }
