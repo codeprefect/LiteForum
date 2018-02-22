@@ -4,7 +4,7 @@ using LiteForum.Models;
 
 namespace LiteForum.Services
 {
-    public class PostService : DataService<LiteForumDbContext, Post>
+    public class PostService : DataWithUserService<LiteForumDbContext, Post>
     {
         public PostService(IRepository<LiteForumDbContext> posts) : base(posts)
         { }
