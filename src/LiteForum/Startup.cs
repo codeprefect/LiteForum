@@ -76,6 +76,12 @@ namespace LiteForum
                         .RequireAuthenticatedUser()
                         .Build();
                 });
+
+                options.AddPolicy(AppConstants.Roles.Admin, policy => {
+                    policy.RequireRole(AppConstants.Roles.Admin)
+                        .RequireAuthenticatedUser()
+                        .Build();
+                });
             });
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

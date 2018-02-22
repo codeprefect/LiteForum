@@ -10,8 +10,6 @@ namespace LiteForum.Services
 {
     public class DataWithUserService<TContext, TEntity> : DataService<TContext, TEntity> where TEntity : class, IEntity
     {
-        private readonly IRepository<TContext> _data;
-
         public DataWithUserService(IRepository<TContext> repository) : base(repository)
         { }
 
