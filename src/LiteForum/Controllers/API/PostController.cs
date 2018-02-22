@@ -97,7 +97,7 @@ namespace LiteForum.Controllers.API
                 {
                     throw new Exception("you do not have write access to this post");
                 }
-                oldPost.Content = post.Content;
+                oldPost.Title = post.Title;
                 _posts.Update(oldPost, UserId);
                 await _posts.SaveAsync();
                 _logger.LogInformation($"User: {UserId} modified a his post {oldPost}");
