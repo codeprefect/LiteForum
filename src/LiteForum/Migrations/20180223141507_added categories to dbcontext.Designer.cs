@@ -11,9 +11,10 @@ using System;
 namespace LiteForum.Migrations
 {
     [DbContext(typeof(LiteForumDbContext))]
-    partial class LiteForumDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180223141507_added categories to dbcontext")]
+    partial class addedcategoriestodbcontext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
