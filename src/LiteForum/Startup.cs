@@ -123,6 +123,14 @@ namespace LiteForum
             });
 
             StartupHelper.CreateRolesAndAdminUser(provider, Configuration).Wait();
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                if (serviceScope.ServiceProvider.GetService<LiteForumDbContext>().AllMigrationsApplied())
+                {
+                    serviceScope.ServiceProvider.GetService<LiteForumDbContext>().Database.Migrate();
+                    serviceScope.ServiceProvider.GetService<LiteForumDbContext>().EnsureSeeded(Configuration).Wait();
+                }
+            }
         }
     }
 }
