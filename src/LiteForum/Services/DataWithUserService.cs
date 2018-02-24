@@ -15,11 +15,11 @@ namespace LiteForum.Services
 
         #region just all the getters
 
-        public new async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> filter,
+        public override async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> filter,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = null, int? skip = null, int? take = null)
         {
-            var properties = string.IsNullOrEmpty(includeProperties) ? "User" : $"User, {includeProperties}";
+            var properties = string.IsNullOrEmpty(includeProperties) ? "User" : $"User,{includeProperties}";
             return await base.GetAsync(filter, orderBy, properties, skip, take);
         }
 

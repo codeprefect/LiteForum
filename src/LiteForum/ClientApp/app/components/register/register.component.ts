@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../_services/auth.service';
 import { AlertService } from '../../_services/alert.service';
+import { Register } from '../../_models/register';
 
 @Component({
     selector: 'register',
     templateUrl: './register.component.html'
 })
 export class RegisterComponent {
-    model: any;
+    model: any = {};
     loading = false;
     
     constructor(

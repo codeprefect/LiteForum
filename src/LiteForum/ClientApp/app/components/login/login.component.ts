@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../_services/auth.service';
 import { AlertService } from '../../_services/alert.service';
+import { Login } from '../../_models/login';
 
 @Component({
     selector: 'login',
     templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
-    model: any = { };
+    model: any = {};
     loading = false;
     returnUrl: string = '';
 
@@ -20,6 +21,10 @@ export class LoginComponent implements OnInit {
     ){ }
 
     ngOnInit() {
+        if(this.authenticationService.isLoggedIn()) {
+            this.router.navigate(['/']);
+            return;
+        }
         this.authenticationService.logout();
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     }

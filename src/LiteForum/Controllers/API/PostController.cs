@@ -33,7 +33,7 @@ namespace LiteForum.Controllers.API
         {
             try
             {
-                var posts = await _posts.GetAsync();
+                var posts = await _posts.GetAsync(includeProperties: "Comments,Comments.Replies");
                 return Ok(posts.Select(p => p.ToVModel()));
             }
             catch (Exception e)

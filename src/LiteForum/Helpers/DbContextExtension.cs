@@ -69,7 +69,7 @@ namespace LiteForum.Helpers
                                 }
                             },
                             new Post {
-                                Title = "Why do we scarcisty of quality programmers if programming is indeed very easy to learn",
+                                Title = "If you are given the opportunity to choose either owning facebook or becoming the president of China, which would you choose?",
                                 CategoryId = context.Categories.LastOrDefault().Id,
                                 UserId = user.Id,
                                 CreatedBy = user.Id,

@@ -58,5 +58,8 @@
     "webpack-hot-middleware": "2.21.0",
     "webpack-merge": "4.1.1",
     "zone.js": "0.8.20"
+  },
+  "dependencies": {
+    "angular2-moment": "^1.8.0"
   }
 }
