@@ -1,0 +1,12 @@
+
+.reply-author {
+    padding: 2px 5px;
+    background-color: #0F0F0F;
+    border: 1px solid #0F0F0F;
+    color: #FFF;
+    border-radius: 15% 10% 15% 10%;
+}
+
+.reply-time {
+    color: #0101F1;
+}

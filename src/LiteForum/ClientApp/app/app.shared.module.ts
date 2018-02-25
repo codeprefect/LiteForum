@@ -21,6 +21,9 @@ import { ReplyService } from './_services/reply.service';
 import { CategoryService } from './_services/category.service';
 import { PostCardComponent } from './components/postcard/postcard.component';
 import { MomentModule } from 'angular2-moment';
+import { PostDetailComponent } from './components/postdetail/postdetail.component';
+import { CommentCardComponent } from './components/commentcard/commentcard.component';
+import { ReplyCardComponent } from './components/replycard/replycard.component';
 
 @NgModule({
     declarations: [
@@ -30,7 +33,10 @@ import { MomentModule } from 'angular2-moment';
         HomeComponent,
         LoginComponent,
         RegisterComponent,
-        PostCardComponent
+        PostCardComponent,
+        PostDetailComponent,
+        CommentCardComponent,
+        ReplyCardComponent
     ],
     imports: [
         CommonModule,
@@ -43,6 +49,7 @@ import { MomentModule } from 'angular2-moment';
             { path: 'login', component: LoginComponent },
             { path: 'register', component: RegisterComponent },
             { path: 'post', component: HomeComponent },
+            { path: 'post/:id', component: PostDetailComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ],

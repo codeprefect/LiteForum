@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
 
     ngOnInit(): void {
         this.forum.getAll().subscribe(result => {
-            this.posts = result;
+            this.posts = result.reverse();
         },
         error => {
             this.alertService.error(error);

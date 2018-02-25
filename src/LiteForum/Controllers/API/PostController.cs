@@ -33,7 +33,7 @@ namespace LiteForum.Controllers.API
         {
             try
             {
-                var posts = await _posts.GetAsync(includeProperties: "Comments,Comments.Replies");
+                var posts = await _posts.GetAsync(includeProperties: "Category,Comments,Comments.User,Comments.Replies");
                 return Ok(posts.Select(p => p.ToVModel()));
             }
             catch (Exception e)
@@ -53,7 +53,7 @@ namespace LiteForum.Controllers.API
             try
             {
                 var post = withChild ?
-                    await _posts.GetOneAsync(filter: filter, includeProperties: "Comments") :
+                    await _posts.GetOneAsync(filter: filter, includeProperties: "Category,Comments,Comments.User,Comments.Replies") :
                     await _posts.GetOneAsync(filter: filter);
                 return Ok(post.ToVModel());
             }

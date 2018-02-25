@@ -10,7 +10,8 @@ export class Post implements Base {
     user?: string;
     id?: any;
     title: string;
-    comments?: Comment[];
+    category: string;
+    comments: Comment[] = [];
     commentsCount?: number;
     lastCommentAt?: Date;
     lastCommentBy?: string;

@@ -12,6 +12,7 @@ namespace LiteForum.Helpers
             {
                 Id = p.Id,
                 Title = p.Title,
+                Category = p.Category.Name,
                 ModifiedDate = p.ModifiedDate,
                 CreatedDate = p.CreatedDate,
                 User = p.User?.UserName,

@@ -1,6 +1,6 @@
 <div class="row card">
     <div class="col-md-8 col-sm-8">
-        <a [routerLink]="['/post/' + post.id]">
+        <a [routerLink]="['/post/', post.id]">
             <p class="post-title">
                 {{ post.title }}
             </p>
@@ -13,5 +13,6 @@
             post.lastCommentAt | amTimeAgo }}</span></p>
             <p>by <span class="last-comment-author">@{{ post.lastCommentBy }}</span></p>
         </div>
+        <p>Category: <span class="post-category">{{ post.category }}</span></p>
     </div>
 </div>
