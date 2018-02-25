@@ -23,6 +23,7 @@ export class AuthService {
             .map(result => {
                 if(result && result.token) {
                     this.store.saveCreds(result);
+                    this.store.save(appConfig.LOGGED_IN_USER, user.username);
                 }
             });
     }
@@ -32,6 +33,10 @@ export class AuthService {
             return true;
         }
         return false;
+    }
+
+    isValid() {
+        
     }
 
     logout() {

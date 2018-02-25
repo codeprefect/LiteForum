@@ -1,0 +1,17 @@
+
+.comment-created {
+    background-color: #00F;
+    padding: 2px 3px;
+    color: #FFF;
+    border-radius: 10%;
+}
+
+.comment-card {
+    padding: 10px;
+    background-color: #fff;
+    margin: 20px;
+}
+
+.reply-card {
+    padding-bottom: 2px
+}

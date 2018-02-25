@@ -39,7 +39,7 @@ namespace LiteForum.Controllers.API
             catch (Exception e)
             {
                 _logger.LogError($"Failed to fetch comments due to {e.Message ?? e.InnerException.Message}");
-                return BadRequest(e);
+                return BadRequest(e.ToResponse(500));
             }
         }
 
@@ -61,7 +61,7 @@ namespace LiteForum.Controllers.API
             catch (Exception e)
             {
                 _logger.LogError($"failed to get comment with id: {id}, due to {e.Message ?? e.InnerException.Message}");
-                return BadRequest(e);
+                return BadRequest(e.ToResponse(500));
             }
         }
 
@@ -83,22 +83,22 @@ namespace LiteForum.Controllers.API
             catch (Exception e)
             {
                 _logger.LogError($"comment creation by {UserId} failed due to {e.Message ?? e.InnerException.Message}");
-                return BadRequest(e);
+                return BadRequest(e.ToResponse(500));
             }
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody]CommentVModel Comment)
+        public async Task<IActionResult> Update([FromBody]CommentVModel comment)
         {
             if (!ModelState.IsValid) return BadRequest($"submitted Comment has {ModelState.ErrorCount} errors");
 
             try
             {
-                var oldComment = await _comments.GetByIdAsync(Comment.Id);
+                var oldComment = await _comments.GetByIdAsync(comment.Id);
                 if (oldComment.UserId != UserId) throw new Exception("you do not have write access to this comment");
                 if (oldComment.PostId != _postId) throw new Exception("you tried to mangle the system. Thanks");
 
-                oldComment.Content = Comment.Content;
+                oldComment.Content = comment.Content;
                 _comments.Update(oldComment, UserId);
                 await _comments.SaveAsync();
                 _logger.LogInformation($"User: {UserId} modified a his comment {oldComment}");
@@ -107,11 +107,11 @@ namespace LiteForum.Controllers.API
             catch (Exception e)
             {
                 _logger.LogError($"comment modification by {UserId} failed due to {e.Message ?? e.InnerException.Message}");
-                return BadRequest(e);
+                return BadRequest(e.ToResponse(500));
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0) return BadRequest("submitted id: ${id} is invalid");
@@ -125,12 +125,12 @@ namespace LiteForum.Controllers.API
                 _comments.Delete(id);
                 await _comments.SaveAsync();
                 _logger.LogInformation($"User: {UserId} deleted his comment with id: {id}");
-                return Ok(comment.ToVModel());
+                return Ok(new LiteForumResponseMessage(200, "deleted successfully"));
             }
             catch (Exception e)
             {
                 _logger.LogError($"comment deletion by {UserId} failed due to {e.Message ?? e.InnerException.Message}");
-                return BadRequest(e);
+                return BadRequest(e.ToResponse(500));
             }
         }
 

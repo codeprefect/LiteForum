@@ -4,7 +4,7 @@ using LiteForum.Models;
 
 namespace LiteForum.Services
 {
-    public class ReplyService : DataService<LiteForumDbContext, Reply>
+    public class ReplyService : DataWithUserService<LiteForumDbContext, Reply>
     {
         public ReplyService(IRepository<LiteForumDbContext> replies) : base(replies)
         { }

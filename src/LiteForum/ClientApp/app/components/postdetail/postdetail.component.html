@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="row card well">
+                <div class="col-md-8 col-sm-8 detailed">
+                    <h4 class="post-title">
+                        {{ post.title }}
+                    </h4>
+                    <p>created <span class="post-created">{{ post.createdDate | amTimeAgo }}</span> by <span class="post-author">{{ post.user }}</span></p>
+                </div>
+                <div class="col-md-4 col-sm-4">
+                    <div class="last-comment">
+                        <p>last comment: <span class="last-comment-time">{{
+                post.lastCommentAt | amTimeAgo }}</span></p>
+                        <p>by <span class="last-comment-author">@{{ post.lastCommentBy }}</span></p>
+                    </div>
+                    <p>Category: <span class="post-category">{{ post.category }}</span></p>
+                </div>
+            </div>
+            <div class="row comments-list">
+                <h4>Comments:</h4>
+                <comment-card *ngFor="let comment of post.comments" [comment]=comment></comment-card>
+                <div class="well new-comment">
+                    <form role="form-inline" (ngSubmit)="f.form.valid && addComment()" #f="ngForm" novalidate>
+                        <div class="input-group">
+                            <label class="sr-only" for="content">New Reply</label>
+                            <input type="text" class="form-control" name="content" [(ngModel)]="newComment.content" #content="ngModel" placeholder="enter new comments here" required>
+                            <span class="input-group-btn"><button type="submit" class="btn btn-primary">Comment</button></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

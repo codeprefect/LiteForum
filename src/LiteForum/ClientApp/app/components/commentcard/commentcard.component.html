@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="comment-card">
+        <p class="comment-header">
+            <span class="comment-author">{{ comment.user }}</span>&nbsp;
+            <span class="comment-created">{{ comment.createdDate | amTimeAgo }}</span>
+        </p>
+        {{ comment.content }} <span class="pull-right" *ngIf="editable">Edit</span>
+        <hr/>
+        <div class="replies">
+            <div class="well reply-card" *ngFor="let reply of comment.replies">
+                <reply-card [reply]=reply></reply-card>
+            </div>
+            <div class="well new-reply">
+                <form role="form-inline" (ngSubmit)="f.form.valid && addReply()" #f="ngForm" novalidate>
+                    <div class="input-group">
+                        <label class="sr-only" for="content">New Reply</label>
+                        <input type="text" class="form-control" name="content" [(ngModel)]="newReply.content" #content="ngModel" placeholder="enter new replies here" required>
+                        <span class="input-group-btn"><button type="submit" class="btn btn-primary">Reply</button></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

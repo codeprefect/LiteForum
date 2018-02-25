@@ -11,12 +11,15 @@ namespace LiteForum.Helpers
             return new PostVModel
             {
                 Id = p.Id,
-                Content = p.Content,
+                Title = p.Title,
+                Category = p.Category.Name,
                 ModifiedDate = p.ModifiedDate,
                 CreatedDate = p.CreatedDate,
                 User = p.User?.UserName,
                 Comments = p.Comments?.Select(c => c.ToVModel()).ToList(),
-                CommentsCount = p.Comments.Count()
+                CommentsCount = p.Comments?.Count() ?? 0,
+                LastCommentBy = p.Comments?.LastOrDefault()?.User?.UserName,
+                LastCommentAt = p.Comments?.LastOrDefault()?.CreatedDate
             };
         }
 
@@ -25,7 +28,7 @@ namespace LiteForum.Helpers
             return new Post
             {
                 Id = p.Id,
-                Content = p.Content,
+                Title = p.Title,
             };
         }
 
@@ -40,7 +43,7 @@ namespace LiteForum.Helpers
                 PostId = c.PostId,
                 User = c.User?.UserName,
                 Replies = c.Replies?.Select(r => r.ToVModel()).ToList(),
-                RepliesCount = c.Replies.Count()
+                RepliesCount = c.Replies?.Count() ?? 0
             };
         }
 
@@ -72,6 +75,26 @@ namespace LiteForum.Helpers
             {
                 Id = r.Id,
                 Content = r.Content
+            };
+        }
+
+        public static CategoryVModel ToVModel(this Category c)
+        {
+            return new CategoryVModel
+            {
+                Id = c.Id,
+                Name = c.Name,
+                ModifiedDate = c.ModifiedDate,
+                CreatedDate = c.CreatedDate
+            };
+        }
+
+        public static Category ToModel(this CategoryVModel c)
+        {
+            return new Category
+            {
+                Id = c.Id,
+                Name = c.Name
             };
         }
     }

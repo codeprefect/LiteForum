@@ -12,7 +12,7 @@ export class Comment implements Base {
     id?: number;
     postId: number;
     content: string;
-    replies?: Reply[];
+    replies: Reply[] = [];
     repliesCount?: number;
     lastReplyAt?: Date;
     lastReplyBy?: string;

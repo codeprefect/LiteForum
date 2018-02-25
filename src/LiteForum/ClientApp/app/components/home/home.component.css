@@ -1,0 +1,10 @@
+.forum-heading {
+    background-color: #0C8989;
+    color: #E5F0EB;
+    border-radius: 1rem;
+}
+
+.forum {
+    background-color: rgba(255, 255, 255, 0);
+    border: 0px solid rgba(255, 255, 255, 0);
+}

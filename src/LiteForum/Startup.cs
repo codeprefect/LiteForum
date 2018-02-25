@@ -76,18 +76,25 @@ namespace LiteForum
                         .RequireAuthenticatedUser()
                         .Build();
                 });
+
+                options.AddPolicy(AppConstants.Roles.Admin, policy => {
+                    policy.RequireRole(AppConstants.Roles.Admin)
+                        .RequireAuthenticatedUser()
+                        .Build();
+                });
             });
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IDataService<LiteForumDbContext, Post>, PostService>();
             services.AddScoped<IDataService<LiteForumDbContext, Comment>, CommentService>();
             services.AddScoped<IDataService<LiteForumDbContext, Reply>, ReplyService>();
+            services.AddScoped<IDataService<LiteForumDbContext, Category>, CategoryService>();
             
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider provider)
         {
             if (env.IsDevelopment())
             {
@@ -114,6 +121,16 @@ namespace LiteForum
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
             });
+
+            StartupHelper.CreateRolesAndAdminUser(provider, Configuration).Wait();
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                if (serviceScope.ServiceProvider.GetService<LiteForumDbContext>().AllMigrationsApplied())
+                {
+                    serviceScope.ServiceProvider.GetService<LiteForumDbContext>().Database.Migrate();
+                    serviceScope.ServiceProvider.GetService<LiteForumDbContext>().EnsureSeeded(Configuration).Wait();
+                }
+            }
         }
     }
 }

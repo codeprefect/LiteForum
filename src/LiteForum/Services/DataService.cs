@@ -18,7 +18,7 @@ namespace LiteForum.Services
 
         #region just all the getters
 
-        public async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> filter,
+        public virtual async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> filter,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = null, int? skip = null, int? take = null)
                 => await _repository.GetAsync<TEntity>(filter, orderBy, includeProperties, skip, take);

@@ -20,6 +20,32 @@ namespace LiteForum.Migrations
                 .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("LiteForum.Entities.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<DateTime?>("Deleted");
+
+                    b.Property<string>("ModifiedBy");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("Name");
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("LiteForum.Entities.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
@@ -59,7 +85,7 @@ namespace LiteForum.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Content");
+                    b.Property<int>("CategoryId");
 
                     b.Property<string>("CreatedBy");
 
@@ -71,6 +97,8 @@ namespace LiteForum.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
+                    b.Property<string>("Title");
+
                     b.Property<string>("UserId");
 
                     b.Property<byte[]>("Version")
@@ -78,6 +106,8 @@ namespace LiteForum.Migrations
                         .ValueGeneratedOnAddOrUpdate();
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("UserId");
 
@@ -291,6 +321,11 @@ namespace LiteForum.Migrations
 
             modelBuilder.Entity("LiteForum.Entities.Models.Post", b =>
                 {
+                    b.HasOne("LiteForum.Entities.Models.Category", "Category")
+                        .WithMany("Posts")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("LiteForum.Models.LiteForumUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");

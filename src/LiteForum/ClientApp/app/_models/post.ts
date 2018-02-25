@@ -3,14 +3,15 @@ import { Comment } from './comment';
 
 export class Post implements Base {
     constructor() {
-        this.content = '';
+        this.title = '';
     }
     modifiedDate?: Date;
     createdDate?: Date;
     user?: string;
     id?: any;
-    content: string;
-    comments?: Comment[];
+    title: string;
+    category: string;
+    comments: Comment[] = [];
     commentsCount?: number;
     lastCommentAt?: Date;
     lastCommentBy?: string;

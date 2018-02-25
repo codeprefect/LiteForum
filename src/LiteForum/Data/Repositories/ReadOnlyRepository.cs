@@ -33,16 +33,6 @@ namespace LiteForum.Data.Repositories
             IQueryable<TEntity> query = _context.Set<TEntity>();
 
             if (filter != null) query = query.Where(filter);
-            
-            try
-            {
-                query = query.Include("User");
-            }
-            catch(Exception e)
-            {
-                _logger.LogError(message: $"failed to include user : {e.Message ?? e.InnerException.Message}");
-            }
-
 
             foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
