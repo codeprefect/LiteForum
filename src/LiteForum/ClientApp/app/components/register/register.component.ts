@@ -28,8 +28,8 @@ export class RegisterComponent {
                     this.router.navigate(['/login']);
                 },
                 error => {
-                    this.alertService.error(error.error.message);
-                    console.log(error);
+                    this.alertService.error(error);
+                    console.log(error.error);
                     this.loading = false;
                 });
     }
