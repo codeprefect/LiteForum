@@ -37,8 +37,7 @@ namespace LiteForum.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterVModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterVModel model)
         {
             if (!ModelState.IsValid) return BadRequest("request object is not a valid");
             {

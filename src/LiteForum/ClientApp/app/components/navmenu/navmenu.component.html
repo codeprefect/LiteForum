@@ -16,6 +16,13 @@
                         <button class="btn btn-success log"><span class='glyphicon glyphicon-log-in'></span>&nbsp; Login</button>
                     </a>
                 </li>
+                <li *ngIf="!isLoggedIn()" [routerLinkActive]="['link-active']">
+                    <a [routerLink]="['/register']">
+                        <button class="btn btn-success log"><span
+                        class='glyphicon glyphicon-sign-up'></span>&nbsp; Sign
+                        Up</button>
+                    </a>
+                </li>
                 <li *ngIf="isLoggedIn()" [routerLinkActive]="['link-active']">
                     <a (click)="logout()">
                         <button class="btn btn-danger log">Log out &nbsp;<span class='glyphicon glyphicon-log-out'></span></button>

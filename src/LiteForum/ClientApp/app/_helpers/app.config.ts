@@ -1,6 +1,6 @@
 
 export const appConfig = {
-    BASE_URL: 'http://localhost:5000/api',
+    BASE_URL: '/api',
     CURRENT_USER: 'auth_token',
     EXPIRY_DATE: 'expires',
     LOGGED_IN_USER: 'logged_in'
