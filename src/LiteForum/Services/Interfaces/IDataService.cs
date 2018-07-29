@@ -42,9 +42,9 @@ namespace LiteForum.Services.Interfaces
 
         #region and here are the create, update, save and delete
 
-        void Create(TEntity entity, string createdBy = null);
+        TEntity Create(TEntity entity, string createdBy = null);
 
-        void Update(TEntity entity, string modifiedBy = null);
+        TEntity Update(TEntity entity, string modifiedBy = null);
 
         void Delete(object id, string deletedBy = null);
 

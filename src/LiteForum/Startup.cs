@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+// using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -107,6 +108,7 @@ namespace LiteForum
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                // app.UseHsts();
             }
 
             app.UseStaticFiles();
@@ -121,6 +123,8 @@ namespace LiteForum
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
             });
+
+            // app.UseHttpsRedirection();
 
             StartupHelper.CreateRolesAndAdminUser(provider, Configuration).Wait();
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())

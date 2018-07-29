@@ -1,5 +1,6 @@
 import { Base } from './base';
 import { Comment } from './comment';
+import { Category } from './category';
 
 export class Post implements Base {
     constructor() {
@@ -10,7 +11,7 @@ export class Post implements Base {
     user?: string;
     id?: any;
     title: string;
-    category: string;
+    category: Category;
     comments: Comment[] = [];
     commentsCount?: number;
     lastCommentAt?: Date;

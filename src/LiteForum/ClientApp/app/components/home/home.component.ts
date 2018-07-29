@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
     posts: Post[] = [];
     newPost: any = {};
     adding: boolean = false;
-    
+
     constructor(private forum: PostService,
         private alertService: AlertService,
         private auth: AuthService,
@@ -27,17 +27,17 @@ export class HomeComponent implements OnInit {
         this.forum.getAll().subscribe(result => {
             this.posts = result.reverse();
         },
-        error => {
-            this.alertService.error(error);
-        });
-
+            error => {
+                this.alertService.error(error);
+            });
 
         this.categoryService.getAll().subscribe(result => {
             this.categories = result;
+            console.log(this.categories);
         },
-        error => {
-            this.alertService.error(error);
-        })
+            error => {
+                this.alertService.error(error);
+            })
     }
 
     isLoggedIn(): boolean {
@@ -51,8 +51,8 @@ export class HomeComponent implements OnInit {
     addPost(): void {
         this.forum.create(this.newPost).subscribe(post => {
             this.forum.getOne(post.id, true).subscribe(thePost => {
-                this.newPost = thePost;
-                this.posts.push(this.newPost);
+                this.newPost = {};
+                this.posts.push(thePost);
             });
         });
     }

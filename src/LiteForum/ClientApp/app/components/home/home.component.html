@@ -17,11 +17,13 @@
                         <form role="form-inline" (ngSubmit)="f.form.valid && addPost()" #f="ngForm" novalidate>
                             <div class="form-group">
                                 <label class="sr-only" for="title">New Post</label>
-                                <input type="text" class="form-control" name="content" [(ngModel)]="newPost.title" #content="ngModel" placeholder="enter new post title" required>
+                                <input type="text" class="form-control" name="content" [(ngModel)]="newPost.title" #content="ngModel" placeholder="enter new post title"
+                                    required>
                             </div>
-                            <select class="form-control">
-                                <option *ngFor="let category of categories" value= {{ category.id }}>
-                                    {{category.name}}
+                            <select id="Id" #Id="ngModel" class="hideLabel form-control" [(ngModel)]="newPost.categoryId" name="Id">
+                                <option selected="true" value="">Select Category</option>
+                                <option [ngValue]="category.id" *ngFor="let category of categories">
+                                    {{ category.name }}
                                 </option>
                             </select>
                             <button type="submit" class="btn btn-primary">Add Post</button>

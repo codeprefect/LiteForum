@@ -11,8 +11,8 @@
         <div class="last-comment">
             <p>last comment: <span class="last-comment-time">{{
             post.lastCommentAt | amTimeAgo }}</span></p>
-            <p>by <span class="last-comment-author">@{{ post.lastCommentBy }}</span></p>
+            <p>by <span class="last-comment-author">@{{ post.lastCommentBy || "none"  }}</span></p>
         </div>
-        <p>Category: <span class="post-category">{{ post.category }}</span></p>
+        <p>Category: <span class="post-category">{{ post.category.name || "unknown" }}</span></p>
     </div>
 </div>

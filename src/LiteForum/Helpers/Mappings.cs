@@ -2,99 +2,83 @@ using System.Linq;
 using LiteForum.Entities.Models;
 using LiteForum.ViewModels;
 
-namespace LiteForum.Helpers
-{
-    public static class Mappings
-    {
-        public static PostVModel ToVModel(this Post p)
-        {
-            return new PostVModel
-            {
+namespace LiteForum.Helpers {
+    public static class Mappings {
+        public static PostVModel ToVModel (this Post p) {
+            return new PostVModel {
                 Id = p.Id,
-                Title = p.Title,
-                Category = p.Category.Name,
-                ModifiedDate = p.ModifiedDate,
-                CreatedDate = p.CreatedDate,
-                User = p.User?.UserName,
-                Comments = p.Comments?.Select(c => c.ToVModel()).ToList(),
-                CommentsCount = p.Comments?.Count() ?? 0,
-                LastCommentBy = p.Comments?.LastOrDefault()?.User?.UserName,
-                LastCommentAt = p.Comments?.LastOrDefault()?.CreatedDate
+                    Title = p.Title,
+                    CategoryId = p.CategoryId,
+                    Category = p.Category?.ToVModel(),
+                    ModifiedDate = p.ModifiedDate,
+                    CreatedDate = p.CreatedDate,
+                    User = p.User?.UserName,
+                    Comments = p.Comments?.Select (c => c.ToVModel ()).ToList (),
+                    CommentsCount = p.Comments?.Count () ?? 0,
+                    LastCommentBy = p.Comments?.LastOrDefault ()?.User?.UserName,
+                    LastCommentAt = p.Comments?.LastOrDefault ()?.CreatedDate
             };
         }
 
-        public static Post ToModel(this PostVModel p)
-        {
-            return new Post
-            {
+        public static Post ToModel (this PostVModel p) {
+            return new Post {
                 Id = p.Id,
-                Title = p.Title,
+                    Title = p.Title,
+                    CategoryId = p.CategoryId
             };
         }
 
-        public static CommentVModel ToVModel(this Comment c)
-        {
-            return new CommentVModel
-            {
+        public static CommentVModel ToVModel (this Comment c) {
+            return new CommentVModel {
                 Id = c.Id,
-                Content = c.Content,
-                ModifiedDate = c.ModifiedDate,
-                CreatedDate = c.CreatedDate,
-                PostId = c.PostId,
-                User = c.User?.UserName,
-                Replies = c.Replies?.Select(r => r.ToVModel()).ToList(),
-                RepliesCount = c.Replies?.Count() ?? 0
+                    Content = c.Content,
+                    ModifiedDate = c.ModifiedDate,
+                    CreatedDate = c.CreatedDate,
+                    PostId = c.PostId,
+                    User = c.User?.UserName,
+                    Replies = c.Replies?.Select (r => r.ToVModel ()).ToList (),
+                    RepliesCount = c.Replies?.Count () ?? 0
             };
         }
 
-        public static Comment ToModel(this CommentVModel c)
-        {
-            return new Comment
-            {
+        public static Comment ToModel (this CommentVModel c) {
+            return new Comment {
                 Id = c.Id,
-                Content = c.Content
+                    Content = c.Content
             };
         }
 
-        public static ReplyVModel ToVModel(this Reply r)
-        {
-            return new ReplyVModel
-            {
+        public static ReplyVModel ToVModel (this Reply r) {
+            return new ReplyVModel {
                 Id = r.Id,
-                Content = r.Content,
-                ModifiedDate = r.ModifiedDate,
-                CreatedDate = r.CreatedDate,
-                User = r.User?.UserName,
-                CommentId = r.CommentId,
+                    Content = r.Content,
+                    ModifiedDate = r.ModifiedDate,
+                    CreatedDate = r.CreatedDate,
+                    User = r.User?.UserName,
+                    CommentId = r.CommentId,
             };
         }
 
-        public static Reply ToModel(this ReplyVModel r)
-        {
-            return new Reply
-            {
+        public static Reply ToModel (this ReplyVModel r) {
+            return new Reply {
                 Id = r.Id,
-                Content = r.Content
+                    Content = r.Content
             };
         }
 
-        public static CategoryVModel ToVModel(this Category c)
-        {
-            return new CategoryVModel
-            {
+        public static CategoryVModel ToVModel (this Category c) {
+            return new CategoryVModel {
                 Id = c.Id,
-                Name = c.Name,
-                ModifiedDate = c.ModifiedDate,
-                CreatedDate = c.CreatedDate
+                    Name = c.Name,
+                    ModifiedDate = c.ModifiedDate,
+                    CreatedDate = c.CreatedDate
             };
         }
 
-        public static Category ToModel(this CategoryVModel c)
-        {
-            return new Category
-            {
+        public static Category ToModel (this CategoryVModel c) {
+            return new Category {
                 Id = c.Id,
-                Name = c.Name
+                    Name = c.Name
             };
         }
     }

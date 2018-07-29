@@ -73,7 +73,7 @@ namespace LiteForum.Controllers.API
                 var newReply = reply.ToModel();
                 newReply.CommentId = _commentId;
                 newReply.UserId = UserId;
-                _replies.Create(newReply, UserId);
+                newReply = _replies.Create(newReply, UserId);
                 await _replies.SaveAsync();
                 _logger.LogInformation($"User: {UserId} created a new reply {newReply}");
                 return Created(Request.Path.Value, newReply.ToVModel());
@@ -97,7 +97,7 @@ namespace LiteForum.Controllers.API
                 if (oldReply.CommentId != _commentId) throw new Exception("you tried to mangle the system. Thanks");
 
                 oldReply.Content = reply.Content;
-                _replies.Update(oldReply, UserId);
+                oldReply = _replies.Update(oldReply, UserId);
                 await _replies.SaveAsync();
                 _logger.LogInformation($"User: {UserId} modified a his reply {oldReply}");
                 return Ok(oldReply.ToVModel());

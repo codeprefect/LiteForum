@@ -74,7 +74,7 @@ namespace LiteForum.Controllers.API
             {
                 var newPost = post.ToModel();
                 newPost.UserId = UserId;
-                _posts.Create(newPost, UserId);
+                newPost = _posts.Create(newPost, UserId);
                 await _posts.SaveAsync();
                 _logger.LogInformation($"User: {UserId} created a new post {newPost}");
                 return Created(Request.Path.Value, newPost.ToVModel());

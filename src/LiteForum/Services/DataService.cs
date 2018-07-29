@@ -49,14 +49,14 @@ namespace LiteForum.Services
         #endregion end of getters
 
         #region create, update, delete and save
-        public void Create(TEntity entity, string createdBy = null)
+        public TEntity Create(TEntity entity, string createdBy = null)
             => _repository.Create<TEntity>(entity, createdBy);
 
         public void Delete(object id, string deletedBy = null) => _repository.Delete<TEntity>(id, deletedBy);
 
         public void Delete(TEntity entity, string deletedBy = null) => _repository.Delete<TEntity>(entity, deletedBy);
 
-        public void Update(TEntity entity, string modifiedBy = null)
+        public TEntity Update(TEntity entity, string modifiedBy = null)
             => _repository.Update<TEntity>(entity, modifiedBy);
 
         public Task SaveAsync() => _repository.SaveAsync();

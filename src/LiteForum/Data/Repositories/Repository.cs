@@ -12,19 +12,21 @@ namespace LiteForum.Data.Repositories
         public Repository(TContext context, ILogger<Repository<TContext>> logger) : base(context, logger)
         { }
 
-        public virtual void Create<TEntity>(TEntity entity, string createdBy = null) where TEntity : class, IEntity
+        public virtual TEntity Create<TEntity>(TEntity entity, string createdBy = null) where TEntity : class, IEntity
         {
             entity.CreatedDate = DateTime.UtcNow;
             entity.CreatedBy = createdBy;
             _context.Set<TEntity>().Add(entity);
+            return entity;
         }
 
-        public virtual void Update<TEntity>(TEntity entity, string modifiedBy = null) where TEntity : class, IEntity
+        public virtual TEntity Update<TEntity>(TEntity entity, string modifiedBy = null) where TEntity : class, IEntity
         {
             entity.ModifiedDate = DateTime.UtcNow;
             entity.ModifiedBy = modifiedBy;
             _context.Set<TEntity>().Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
+            return entity;
         }
 
         public virtual void Delete<TEntity>(object id, string deletedBy = null) where TEntity : class, IEntity
