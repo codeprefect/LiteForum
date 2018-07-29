@@ -27,16 +27,17 @@ namespace LiteForum.Data.Repositories
             _context.Entry(entity).State = EntityState.Modified;
         }
 
-        public virtual void Delete<TEntity>(object id) where TEntity : class, IEntity
+        public virtual void Delete<TEntity>(object id, string deletedBy = null) where TEntity : class, IEntity
         {
             TEntity entity = _context.Set<TEntity>().Find(id);
-            Delete(entity);
+            Delete(entity, deletedBy);
         }
 
-        public virtual void Delete<TEntity>(TEntity entity) where TEntity : class, IEntity
+        public virtual void Delete<TEntity>(TEntity entity, string deletedBy = null) where TEntity : class, IEntity
         {
             var dbSet = _context.Set<TEntity>();
             entity.Deleted = DateTime.UtcNow;
+            entity.ModifiedBy = deletedBy;
             if (_context.Entry(entity).State == EntityState.Modified)
             {
                 dbSet.Attach(entity);

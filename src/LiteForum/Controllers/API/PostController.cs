@@ -55,6 +55,7 @@ namespace LiteForum.Controllers.API
                 var post = withChild ?
                     await _posts.GetOneAsync(filter: filter, includeProperties: "Category,Comments,Comments.User,Comments.Replies") :
                     await _posts.GetOneAsync(filter: filter);
+
                 return Ok(post.ToVModel());
             }
             catch (Exception e)

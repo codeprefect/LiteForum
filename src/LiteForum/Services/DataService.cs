@@ -52,9 +52,9 @@ namespace LiteForum.Services
         public void Create(TEntity entity, string createdBy = null)
             => _repository.Create<TEntity>(entity, createdBy);
 
-        public void Delete(object id) => _repository.Delete<TEntity>(id);
+        public void Delete(object id, string deletedBy = null) => _repository.Delete<TEntity>(id, deletedBy);
 
-        public void Delete(TEntity entity) => _repository.Delete<TEntity>(entity);
+        public void Delete(TEntity entity, string deletedBy = null) => _repository.Delete<TEntity>(entity, deletedBy);
 
         public void Update(TEntity entity, string modifiedBy = null)
             => _repository.Update<TEntity>(entity, modifiedBy);

@@ -11,10 +11,10 @@ namespace LiteForum.Data.Interfaces
         void Update<TEntity>(TEntity entity, string modifiedBy = null)
             where TEntity : class, IEntity;
 
-        void Delete<TEntity>(object id)
+        void Delete<TEntity>(object id, string deletedBy = null)
             where TEntity : class, IEntity;
 
-        void Delete<TEntity>(TEntity entity)
+        void Delete<TEntity>(TEntity entity, string deletedBy = null)
             where TEntity : class, IEntity;
 
         Task SaveAsync();
