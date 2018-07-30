@@ -26,9 +26,9 @@ namespace LiteForum.Controllers.API {
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Get (int? postId) {
+        public async Task<IActionResult> Get (int postId) {
             try {
-                var Comments = await _comments.GetAsync (filter: CommentFilter (postId ?? 0));
+                var Comments = await _comments.GetAsync (filter: CommentFilter (postId));
                 return Ok (Comments.Select (c => c.ToVModel ()));
             } catch (Exception e) {
                 _logger.LogError ($"Failed to fetch comments due to {e.Message ?? e.InnerException.Message}");
@@ -38,10 +38,10 @@ namespace LiteForum.Controllers.API {
 
         [HttpGet ("{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetSingle (int? postId, int id, bool withChild = false) {
+        public async Task<IActionResult> GetSingle (int postId, int id, bool withChild = false) {
             if (id <= 0) return BadRequest ($"submitted id: {id} is not valid");
 
-            var filter = CommentFilter(postId ?? 0).And(p => p.Id == id);
+            var filter = CommentFilter(postId).And(p => p.Id == id);
             try {
                 var comment = withChild ?
                     await _comments.GetOneAsync (filter: filter, includeProperties: "Replies") :
@@ -55,12 +55,12 @@ namespace LiteForum.Controllers.API {
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create (int? postId, [FromBody] CommentVModel comment) {
-            if (!ModelState.IsValid || postId == null || postId == 0) return BadRequest ($"submitted comment has {ModelState.ErrorCount} errors");
+        public async Task<IActionResult> Create (int postId, [FromBody] CommentVModel comment) {
+            if (!ModelState.IsValid || postId == 0) return BadRequest ($"submitted comment has {ModelState.ErrorCount} errors");
 
             try {
                 var newComment = comment.ToModel ();
-                newComment.PostId = postId ?? 0;
+                newComment.PostId = postId;
                 newComment.UserId = UserId;
                 newComment = _comments.Create (newComment, UserId);
                 await _comments.SaveAsync ();
@@ -73,7 +73,7 @@ namespace LiteForum.Controllers.API {
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update (int? postId, [FromBody] CommentVModel comment) {
+        public async Task<IActionResult> Update (int postId, [FromBody] CommentVModel comment) {
             if (!ModelState.IsValid) return BadRequest ($"submitted Comment has {ModelState.ErrorCount} errors");
 
             try {
@@ -93,7 +93,7 @@ namespace LiteForum.Controllers.API {
         }
 
         [HttpDelete ("{id}")]
-        public async Task<IActionResult> Delete (int? postId, int id) {
+        public async Task<IActionResult> Delete (int postId, int id) {
             if (id <= 0) return BadRequest ("submitted id: ${id} is invalid");
 
             try {
