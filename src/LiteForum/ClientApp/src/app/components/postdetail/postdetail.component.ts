@@ -3,7 +3,7 @@ import { PostService } from '../../_services/post.service';
 import { Post } from '../../_models/post';
 import { AlertService } from '../../_services/alert.service';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Comment } from '../../_models/comment'
 import { CommentService } from '../../_services/comment.service';
 import { StorageService } from '../../_services/storage.service';

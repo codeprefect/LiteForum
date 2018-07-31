@@ -49,10 +49,18 @@
             "options": {
                 "env": {
                     "ASPNETCORE_ENVIRONMENT": "Production"
-                },
+                }
             },
             "problemMatcher": [
                 "$msCompile"
+            ]
+        },
+        {
+            "type": "npm",
+            "script": "build",
+            "path": "src/LiteForum/ClientApp/",
+            "problemMatcher": [
+                "$eslint-compact"
             ]
         }
     ]

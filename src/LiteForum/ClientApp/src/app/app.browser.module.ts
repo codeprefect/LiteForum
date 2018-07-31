@@ -11,13 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         AppModuleShared,
         BrowserAnimationsModule
     ],
-    providers: [
-        { provide: 'BASE_URL', useFactory: getBaseUrl }
-    ]
+    providers: []
 })
 export class AppModule {
-}
-
-export function getBaseUrl() {
-    return document.getElementsByTagName('base')[0].href;
 }

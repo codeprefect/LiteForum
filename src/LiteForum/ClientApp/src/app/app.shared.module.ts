@@ -20,7 +20,7 @@ import { CommentService } from './_services/comment.service';
 import { ReplyService } from './_services/reply.service';
 import { CategoryService } from './_services/category.service';
 import { PostCardComponent } from './components/postcard/postcard.component';
-import { MomentModule } from 'angular2-moment';
+import { MomentModule } from 'ngx-moment';
 import { PostDetailComponent } from './components/postdetail/postdetail.component';
 import { CommentCardComponent } from './components/commentcard/commentcard.component';
 import { ReplyCardComponent } from './components/replycard/replycard.component';

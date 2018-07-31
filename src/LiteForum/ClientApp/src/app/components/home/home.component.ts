@@ -26,18 +26,15 @@ export class HomeComponent implements OnInit {
     ngOnInit(): void {
         this.forum.getAll().subscribe(result => {
             this.posts = result.reverse();
-        },
-            error => {
-                this.alertService.error(error);
-            });
+        }, error => {
+            this.alertService.error(error);
+        });
 
         this.categoryService.getAll().subscribe(result => {
             this.categories = result;
-            console.log(this.categories);
-        },
-            error => {
-                this.alertService.error(error);
-            })
+        }, error => {
+            this.alertService.error(error);
+        });
     }
 
     isLoggedIn(): boolean {
