@@ -3,26 +3,23 @@ import { PostService } from '../../_services/post.service';
 import { Post } from '../../_models/post';
 import { AlertService } from '../../_services/alert.service';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
-import { Observable } from 'rxjs';
-import { Comment } from '../../_models/comment'
 import { CommentService } from '../../_services/comment.service';
 import { StorageService } from '../../_services/storage.service';
 import { appConfig } from '../../_helpers/app.config';
 
 @Component({
-    selector: 'post-detail',
+    selector: 'lfc-post-detail',
     templateUrl: './postdetail.component.html',
     styleUrls: ['./postdetail.component.css']
 })
 export class PostDetailComponent implements OnInit {
-    loading: boolean = false;
+    loading = false;
     id: number;
     post: Post;
     newComment: any = {};
 
     constructor(
         private route: ActivatedRoute,
-        private router: Router,
         private posts: PostService,
         private comments: CommentService,
         private store: StorageService,
@@ -35,7 +32,7 @@ export class PostDetailComponent implements OnInit {
             console.log(this.id);
             this.posts.getOne(this.id, true).subscribe(post => {
                 this.post = post;
-                this.initComments();    
+                this.initComments();
             });
         });
     }
@@ -55,7 +52,7 @@ export class PostDetailComponent implements OnInit {
                     data.user = this.store.read(appConfig.LOGGED_IN_USER);
                     this.post.comments.push(data);
                     this.loading = false;
-                    this.newComment = { }
+                    this.newComment = { };
                 },
                 error => {
                     this.alert.error(error.error.message);

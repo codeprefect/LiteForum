@@ -19,7 +19,9 @@
             </div>
             <div class="row comments-list">
                 <h4>Comments:</h4>
-                <comment-card *ngFor="let comment of post.comments" [comment]=comment></comment-card>
+                <div *ngIf="post.comments">
+                    <lfc-comment-card *ngFor="let comment of post.comments" [comment]=comment></lfc-comment-card>
+                </div>
                 <div class="well new-comment">
                     <form role="form-inline" (ngSubmit)="f.form.valid && addComment()" #f="ngForm" novalidate>
                         <div class="input-group">

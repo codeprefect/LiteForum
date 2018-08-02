@@ -7,7 +7,7 @@ import { CategoryService } from '../../_services/category.service';
 import { Category } from '../../_models/category';
 
 @Component({
-    selector: 'home',
+    selector: 'lfc-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css']
 })
@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
     categories: Category[];
     posts: Post[] = [];
     newPost: any = {};
-    adding: boolean = false;
+    adding = false;
 
     constructor(private forum: PostService,
         private alertService: AlertService,

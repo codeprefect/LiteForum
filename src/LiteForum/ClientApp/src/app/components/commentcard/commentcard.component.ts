@@ -1,21 +1,19 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { PostService } from '../../_services/post.service';
 import { Comment } from '../../_models/comment';
 import { AlertService } from '../../_services/alert.service';
-import { Reply } from '../../_models/reply';
 import { ReplyService } from '../../_services/reply.service';
 import { StorageService } from '../../_services/storage.service';
 import { appConfig } from '../../_helpers/app.config';
 
 @Component({
-    selector: 'comment-card',
+    selector: 'lfc-comment-card',
     templateUrl: './commentcard.component.html',
     styleUrls: ['./commentcard.component.css']
 })
 export class CommentCardComponent implements OnInit {
     @Input() comment: Comment;
-    loading: boolean = false;
-    editable: boolean = false;
+    loading = false;
+    editable = false;
     newReply: any = {};
 
     constructor(
@@ -25,7 +23,7 @@ export class CommentCardComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        if(!this.comment.replies) {
+        if (!this.comment.replies) {
             this.comment.replies = [ ];
         }
         if (this.comment && this.comment.user === this.store.read(appConfig.LOGGED_IN_USER)) {

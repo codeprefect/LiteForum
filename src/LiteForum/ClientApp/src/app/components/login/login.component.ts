@@ -2,26 +2,25 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../_services/auth.service';
 import { AlertService } from '../../_services/alert.service';
-import { Login } from '../../_models/login';
 
 @Component({
-    selector: 'login',
+    selector: 'lfc-login',
     templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
     model: any = {};
     loading = false;
-    returnUrl: string = '';
+    returnUrl = '';
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthService,
         private alertService: AlertService
-    ){ }
+    ) { }
 
     ngOnInit() {
-        if(this.authenticationService.isLoggedIn()) {
+        if (this.authenticationService.isLoggedIn()) {
             this.router.navigate(['/']);
             return;
         }

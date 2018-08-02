@@ -1,14 +1,14 @@
 <div class="row">
-    <div class="comment-card">
+    <div class="lfc-comment-card">
         <p class="comment-header">
             <span class="comment-author">{{ comment.user }}</span>&nbsp;
-            <span class="comment-created">{{ comment.createdDate | amTimeAgo }}</span>
+            <span class="comment-created">{{ comment.createdDate | amDuration }}</span>
         </p>
         {{ comment.content }} <span class="pull-right" *ngIf="editable">Edit</span>
         <hr/>
         <div class="replies">
             <div class="well reply-card" *ngFor="let reply of comment.replies">
-                <reply-card [reply]=reply></reply-card>
+                <lfc-reply-card [reply]=reply></lfc-reply-card>
             </div>
             <div class="well new-reply">
                 <form role="form-inline" (ngSubmit)="f.form.valid && addReply()" #f="ngForm" novalidate>

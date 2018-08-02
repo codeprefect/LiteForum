@@ -123,11 +123,11 @@
   "defaultProject": "liteforum",
   "schematics": {
     "@schematics/angular:component": {
-      "prefix": "app",
+      "prefix": "lfc",
       "styleext": "css"
     },
     "@schematics/angular:directive": {
-      "prefix": "app"
+      "prefix": "lfd"
     }
   }
 }

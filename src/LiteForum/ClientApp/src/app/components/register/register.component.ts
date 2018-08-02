@@ -2,16 +2,15 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../_services/auth.service';
 import { AlertService } from '../../_services/alert.service';
-import { Register } from '../../_models/register';
 
 @Component({
-    selector: 'register',
+    selector: 'lfc-register',
     templateUrl: './register.component.html'
 })
 export class RegisterComponent {
     model: any = {};
     loading = false;
-    
+
     constructor(
         private router: Router,
         private authService: AuthService,

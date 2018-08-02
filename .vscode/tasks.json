@@ -62,6 +62,14 @@
             "problemMatcher": [
                 "$eslint-compact"
             ]
+        },
+        {
+            "type": "npm",
+            "script": "build:ssr",
+            "path": "src/LiteForum/ClientApp/",
+            "problemMatcher": [
+                "$eslint-stylish"
+            ]
         }
     ]
 }

@@ -3,7 +3,7 @@ import { AuthService } from '../../_services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'nav-menu',
+    selector: 'lfc-nav-menu',
     templateUrl: './navmenu.component.html',
     styleUrls: ['./navmenu.component.css']
 })
@@ -15,7 +15,7 @@ export class NavMenuComponent {
     }
 
     logout() {
-        console.log("logging out");
+        console.log('logging out');
         this.auth.logout();
         this.router.navigate(['/home']);
     }
