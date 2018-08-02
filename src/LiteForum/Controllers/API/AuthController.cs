@@ -18,6 +18,7 @@ using LiteForum.Helpers;
 namespace LiteForum.Controllers
 {
     [Route("/api/[action]")]
+    [ApiController]
     public class AuthController : Controller
     {
         private readonly SignInManager<LiteForumUser> _signInManager;
@@ -39,67 +40,54 @@ namespace LiteForum.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterVModel model)
         {
-            if (!ModelState.IsValid) return BadRequest("request object is not a valid");
+            var user = new LiteForumUser { UserName = model.Username, Email = model.Email };
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
             {
-                var user = new LiteForumUser { UserName = model.Username, Email = model.Email };
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("User created a new account with password.");
-                    await _userManager.AddToRoleAsync(user, AppConstants.Roles.Member); // add user to default member role
+                _logger.LogInformation("User created a new account with password.");
+                await _userManager.AddToRoleAsync(user, AppConstants.Roles.Member); // add user to default member role
 
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation("User created a new account with password.");
-                    return Ok(new {
-                        username = user.UserName,
-                        email = user.Email,
-                        status = "successfull"
-                    });
-                }
-                AddErrors(result);
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                _logger.LogInformation("User created a new account with password.");
+                return Ok(new {
+                    username = user.UserName,
+                    email = user.Email,
+                    status = "successfull"
+                });
             }
-
-            return Ok(ModelState);
+            ModelState.AddModelError("validation_error", result.Errors.FirstOrDefault().Description);
+            return BadRequest(ModelState);
         }
 
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginVModel model)
         {
-            if (ModelState.IsValid)
+            var user = await _userManager.FindByNameAsync(model.Username);
+
+            if (user != null)
             {
-                var user = await _userManager.FindByNameAsync(model.Username);
-
-                if (user != null)
+                var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+                if (result.Succeeded)
                 {
-                    var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-                    if (result.Succeeded)
-                    {
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Secret"]));
-                        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Secret"]));
+                    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                        var token = new JwtSecurityToken(_config["Tokens:Issuer"],
-                            _config["Tokens:Audience"],
-                            await GetValidClaims(user),
-                            expires: DateTime.Now.AddDays(7),
-                            signingCredentials: creds);
+                    var token = new JwtSecurityToken(_config["Tokens:Issuer"],
+                        _config["Tokens:Audience"],
+                        await GetValidClaims(user),
+                        expires: DateTime.Now.AddDays(7),
+                        signingCredentials: creds);
 
-                        _logger.LogInformation($"Created token for {user.UserName}");
+                    _logger.LogInformation($"Created token for {user.UserName}");
 
-                        return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token), expiration = token.ValidTo });
-                    }
+                    return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token), expiration = token.ValidTo });
                 }
-                else return BadRequest(new
-                {
-                    StatusCode = 400,
-                    Message = "invalid login credentials"
-                });
             }
-
             return BadRequest(new
             {
                 StatusCode = 400,
-                Message = "request object is not a valid credential"
+                Message = "invalid login credentials"
             });
         }
 

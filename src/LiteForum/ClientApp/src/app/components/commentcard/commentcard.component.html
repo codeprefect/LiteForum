@@ -2,7 +2,7 @@
     <div class="lfc-comment-card">
         <p class="comment-header">
             <span class="comment-author">{{ comment.user }}</span>&nbsp;
-            <span class="comment-created">{{ comment.createdDate | amDuration }}</span>
+            <span class="comment-created">{{ comment.createdDate | amDuration: 'seconds' }}</span>
         </p>
         {{ comment.content }} <span class="pull-right" *ngIf="editable">Edit</span>
         <hr/>

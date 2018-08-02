@@ -15,6 +15,7 @@ namespace LiteForum.Controllers.API
 {
     [Authorize(policy: "Authenticated")]
     [Route("api/[controller]")]
+    [ApiController]
     public class PostController : BaseApiController
     {
         private readonly ILogger<PostController> _logger;
@@ -68,8 +69,6 @@ namespace LiteForum.Controllers.API
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]PostVModel post)
         {
-            if(!ModelState.IsValid) return BadRequest($"submitted post has {ModelState.ErrorCount} errors");
-
             try
             {
                 var newPost = post.ToModel();
@@ -89,8 +88,6 @@ namespace LiteForum.Controllers.API
         [HttpPut]
         public async Task<IActionResult> Update([FromBody]PostVModel post)
         {
-            if (!ModelState.IsValid) return BadRequest($"submitted post has {ModelState.ErrorCount} errors");
-
             try
             {
                 var oldPost = await _posts.GetByIdAsync(post.Id);

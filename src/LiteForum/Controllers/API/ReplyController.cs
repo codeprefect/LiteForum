@@ -15,6 +15,7 @@ namespace LiteForum.Controllers.API
 {
     [Authorize(policy: "Authenticated")]
     [Route("api/comment/{commentId}/[controller]")]
+    [ApiController]
     public class ReplyController : BaseApiController
     {
         private readonly ILogger<ReplyController> _logger;
@@ -66,8 +67,6 @@ namespace LiteForum.Controllers.API
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]ReplyVModel reply)
         {
-            if (!ModelState.IsValid) return BadRequest($"submitted reply has {ModelState.ErrorCount} errors");
-
             try
             {
                 var newReply = reply.ToModel();
@@ -88,8 +87,6 @@ namespace LiteForum.Controllers.API
         [HttpPut]
         public async Task<IActionResult> Update([FromBody]ReplyVModel reply)
         {
-            if (!ModelState.IsValid) return BadRequest($"submitted Reply has {ModelState.ErrorCount} errors");
-
             try
             {
                 var oldReply = await _replies.GetByIdAsync(reply.Id);

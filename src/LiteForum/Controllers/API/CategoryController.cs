@@ -15,6 +15,7 @@ namespace LiteForum.Controllers.API
 {
     [Authorize(policy: "Authenticated")]
     [Route("api/[controller]")]
+    [ApiController]
     public class CategoryController : BaseApiController
     {
         private readonly ILogger<CategoryController> _logger;
@@ -67,8 +68,6 @@ namespace LiteForum.Controllers.API
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]CategoryVModel category)
         {
-            if(!ModelState.IsValid) return BadRequest($"submitted category has {ModelState.ErrorCount} errors");
-
             try
             {
                 var newCategory = category.ToModel();
@@ -88,8 +87,6 @@ namespace LiteForum.Controllers.API
         [Authorize(policy: AppConstants.Roles.Admin)]
         public async Task<IActionResult> Update([FromBody]CategoryVModel category)
         {
-            if (!ModelState.IsValid) return BadRequest($"submitted category has {ModelState.ErrorCount} errors");
-
             try
             {
                 var oldCategory = await _categories.GetByIdAsync(category.Id);

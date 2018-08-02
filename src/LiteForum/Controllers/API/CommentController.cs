@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 namespace LiteForum.Controllers.API {
     [Authorize (policy: "Authenticated")]
     [Route ("api/post/{postId}/[controller]")]
+    [ApiController]
     public class CommentController : BaseApiController {
         private readonly ILogger<CommentController> _logger;
         private readonly IDataService<LiteForumDbContext, Comment> _comments;
@@ -41,7 +42,7 @@ namespace LiteForum.Controllers.API {
         public async Task<IActionResult> GetSingle (int postId, int id, bool withChild = false) {
             if (id <= 0) return BadRequest ($"submitted id: {id} is not valid");
 
-            var filter = CommentFilter(postId).And(p => p.Id == id);
+            var filter = CommentFilter(postId).And(c => c.Id == id);
             try {
                 var comment = withChild ?
                     await _comments.GetOneAsync (filter: filter, includeProperties: "Replies") :
@@ -56,8 +57,6 @@ namespace LiteForum.Controllers.API {
 
         [HttpPost]
         public async Task<IActionResult> Create (int postId, [FromBody] CommentVModel comment) {
-            if (!ModelState.IsValid || postId == 0) return BadRequest ($"submitted comment has {ModelState.ErrorCount} errors");
-
             try {
                 var newComment = comment.ToModel ();
                 newComment.PostId = postId;
@@ -74,12 +73,10 @@ namespace LiteForum.Controllers.API {
 
         [HttpPut]
         public async Task<IActionResult> Update (int postId, [FromBody] CommentVModel comment) {
-            if (!ModelState.IsValid) return BadRequest ($"submitted Comment has {ModelState.ErrorCount} errors");
-
             try {
                 var oldComment = await _comments.GetByIdAsync (comment.Id);
-                if (oldComment.UserId != UserId) throw new Exception ("you do not have write access to this comment");
-                if (oldComment.PostId != postId) throw new Exception ("you tried to mangle the system. Thanks");
+                if (oldComment.UserId != UserId) throw new UnauthorizedAccessException ("you do not have write access to this comment");
+                if (oldComment.PostId != postId) return new NotFoundObjectResult("you tried to mangle the system. Thanks");
 
                 oldComment.Content = comment.Content;
                 _comments.Update (oldComment, UserId);

@@ -3,5 +3,5 @@
 </p>
 <p>
     <span *ngIf="editable">Edit</span>
-    <span class="pull-right reply-time">{{ reply.createdDate | amDuration }}</span>
+    <span class="pull-right reply-time">{{ reply.createdDate | amDuration: 'seconds' }}</span>
 </p>

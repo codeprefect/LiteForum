@@ -10,7 +10,7 @@ namespace LiteForum.Controllers.API
     public class BaseApiController : Controller
     {
         protected string UserId => User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
-        protected bool IsMember => User.IsInRole("Member");
+        protected bool IsMember => User.IsInRole(AppConstants.Roles.Member);
         protected bool IsAdmin => User.IsInRole(AppConstants.Roles.Admin);
     }
 }
