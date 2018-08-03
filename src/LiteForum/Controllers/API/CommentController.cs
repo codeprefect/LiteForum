@@ -29,7 +29,7 @@ namespace LiteForum.Controllers.API {
         [AllowAnonymous]
         public async Task<IActionResult> Get (int postId) {
             try {
-                var Comments = await _comments.GetAsync (filter: CommentFilter (postId));
+                var Comments = await _comments.GetAsync (filter: c => c.PostId == postId);
                 return Ok (Comments.Select (c => c.ToVModel ()));
             } catch (Exception e) {
                 _logger.LogError ($"Failed to fetch comments due to {e.Message ?? e.InnerException.Message}");
@@ -40,9 +40,9 @@ namespace LiteForum.Controllers.API {
         [HttpGet ("{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetSingle (int postId, int id, bool withChild = false) {
-            if (id <= 0) return BadRequest ($"submitted id: {id} is not valid");
+            if (id <= 0) throw new IndexOutOfRangeException ($"submitted id: {id} is not valid");
 
-            var filter = CommentFilter(postId).And(c => c.Id == id);
+            Expression<Func<Comment, bool>> filter = c => c.PostId == postId && c.Id == id;
             try {
                 var comment = withChild ?
                     await _comments.GetOneAsync (filter: filter, includeProperties: "Replies") :
@@ -75,9 +75,8 @@ namespace LiteForum.Controllers.API {
         public async Task<IActionResult> Update (int postId, [FromBody] CommentVModel comment) {
             try {
                 var oldComment = await _comments.GetByIdAsync (comment.Id);
-                if (oldComment.UserId != UserId) throw new UnauthorizedAccessException ("you do not have write access to this comment");
-                if (oldComment.PostId != postId) return new NotFoundObjectResult("you tried to mangle the system. Thanks");
-
+                if (oldComment.UserId != UserId) throw new UnauthorizedAccessException (userMismatchMessage);
+                if (oldComment.PostId != postId) throw new AccessViolationException (postMismatchMessage);
                 oldComment.Content = comment.Content;
                 _comments.Update (oldComment, UserId);
                 await _comments.SaveAsync ();
@@ -91,12 +90,12 @@ namespace LiteForum.Controllers.API {
 
         [HttpDelete ("{id}")]
         public async Task<IActionResult> Delete (int postId, int id) {
-            if (id <= 0) return BadRequest ("submitted id: ${id} is invalid");
+            if (id <= 0) throw new IndexOutOfRangeException ("submitted id: ${id} is invalid");
 
             try {
                 var comment = await _comments.GetByIdAsync (id);
-                if (comment.UserId != UserId) throw new Exception ("sorry, you cannot delete this comment.");
-                if (comment.PostId != postId) throw new Exception ("you tried to mangle the system. Thanks");
+                if (comment.UserId != UserId) throw new UnauthorizedAccessException (userMismatchMessage);
+                if (comment.PostId != postId) throw new AccessViolationException (postMismatchMessage);
 
                 _comments.Delete (id);
                 await _comments.SaveAsync ();
@@ -109,10 +108,8 @@ namespace LiteForum.Controllers.API {
         }
 
         #region Helpers
-        protected Expression<Func<Comment, bool>> CommentFilter (int postId) {
-            return comment => comment.PostId == postId;
-        }
+        private const string userMismatchMessage = "comment was authored by another user.";
+        private const string postMismatchMessage = "comment does not belong to the specified post.";
         #endregion
-
     }
 }
