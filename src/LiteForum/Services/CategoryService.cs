@@ -1,4 +1,4 @@
-using LiteForum.Data.Interfaces;
+using CP.Repositories.Interfaces;
 using LiteForum.Entities.Models;
 using LiteForum.Models;
 
