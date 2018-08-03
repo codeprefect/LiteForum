@@ -44,6 +44,7 @@ namespace LiteForum.Controllers.API {
 
             try {
                 var reply = await _replies.GetOneAsync (filter: r => r.Id == id && r.CommentId == commentId);
+                if (reply == null) return NotFound ();
                 return Ok (reply.ToVModel ());
             } catch (Exception e) {
                 _logger.LogError ($"failed to get reply with id: {id}, due to {e.Message ?? e.InnerException.Message}");

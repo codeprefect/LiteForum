@@ -47,7 +47,7 @@ namespace LiteForum.Controllers.API {
                 var post = withChild ?
                     await _posts.GetOneAsync (filter: filter, includeProperties: "Category,Comments,Comments.User,Comments.Replies") :
                     await _posts.GetOneAsync (filter: filter);
-
+                if(post == null) return NotFound();
                 return Ok (post.ToVModel ());
             } catch (Exception e) {
                 _logger.LogError ($"failed to get post with id: {id}, due to {e.Message ?? e.InnerException.Message}");

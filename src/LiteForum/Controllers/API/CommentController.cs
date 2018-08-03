@@ -47,8 +47,8 @@ namespace LiteForum.Controllers.API {
                 var comment = withChild ?
                     await _comments.GetOneAsync (filter: filter, includeProperties: "Replies") :
                     await _comments.GetOneAsync (filter: filter);
-
-                return Ok (comment.ToVModel ());
+                if (comment == null) return NotFound ();
+                return Ok (comment?.ToVModel ());
             } catch (Exception e) {
                 _logger.LogError ($"failed to get comment with id: {id}, due to {e.Message ?? e.InnerException.Message}");
                 return BadRequest (e.ToResponse (500));
