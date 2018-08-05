@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace LiteForum.Helpers
 {
-    public static class DbContextExtension
+    public static class LiteForumDbContextExtension
     {
         public static bool AllMigrationsApplied(this DbContext context)
         {
@@ -99,7 +99,7 @@ namespace LiteForum.Helpers
                                 PostId = context.Posts.LastOrDefault().Id
                             }
                         };
-                        
+
                         context.Comments.AddRange(comments);
                         await context.SaveChangesAsync();
                     }

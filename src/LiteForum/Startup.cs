@@ -20,106 +20,131 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LiteForum {
-    public class Startup {
+namespace LiteForum
+{
+    public class Startup
+    {
         private readonly IConfiguration Configuration;
-        public Startup (IConfiguration configuration) {
+        public Startup(IConfiguration configuration)
+        {
             Configuration = configuration;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices (IServiceCollection services) {
-            services.AddDbContext<LiteForumDbContext> (options => {
-                options.UseSqlServer (Configuration.GetConnectionString ("DefaultConnection"));
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<LiteForumDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddIdentity<LiteForumUser, IdentityRole> ()
-                .AddEntityFrameworkStores<LiteForumDbContext> ()
-                .AddDefaultTokenProviders ();
+            services.AddIdentity<LiteForumUser, IdentityRole>()
+                .AddEntityFrameworkStores<LiteForumDbContext>()
+                .AddDefaultTokenProviders();
 
-            services.AddAuthentication (options => {
+            services.AddAuthentication(options =>
+            {
                 options.DefaultAuthenticateScheme = "Identity.Application";
-            }).ConfigureJwtAuth (Configuration);
+            }).ConfigureJwtAuth(Configuration);
 
-            services.ConfigureApplicationCookie (options => {
+            services.ConfigureApplicationCookie(options =>
+            {
                 options.Cookie.Name = "AuthCookie";
                 options.Cookie.Path = "/";
                 options.Cookie.HttpOnly = false;
                 options.Cookie.SameSite = SameSiteMode.Lax;
                 options.SlidingExpiration = true;
-                options.Events.OnRedirectToLogin = async ctx => {
-                    if (ctx.Request.Path.StartsWithSegments ("/api") && ctx.Response.StatusCode == 200) {
-                        ctx.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
-                    } else {
-                        ctx.Response.Redirect (ctx.RedirectUri);
+                options.Events.OnRedirectToLogin = async ctx =>
+                {
+                    if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
+                    {
+                        ctx.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    }
+                    else
+                    {
+                        ctx.Response.Redirect(ctx.RedirectUri);
                     }
 
-                    await Task.Yield ();
+                    await Task.Yield();
                 };
             });
 
-            services.AddAuthorization (options => {
-                options.AddPolicy ("Authenticated", policy => {
-                    policy.AddAuthenticationSchemes ("Identity.Application", "JwtBearer")
-                        .RequireAuthenticatedUser ()
-                        .Build ();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Authenticated", policy =>
+                {
+                    policy.AddAuthenticationSchemes("Identity.Application", "JwtBearer")
+                        .RequireAuthenticatedUser()
+                        .Build();
                 });
 
-                options.AddPolicy (AppConstants.Roles.Admin, policy => {
-                    policy.RequireRole (AppConstants.Roles.Admin)
-                        .RequireAuthenticatedUser ()
-                        .Build ();
+                options.AddPolicy(AppConstants.Roles.Admin, policy =>
+                {
+                    policy.RequireRole(AppConstants.Roles.Admin)
+                        .RequireAuthenticatedUser()
+                        .Build();
                 });
             });
 
-            services.AddScoped (typeof (IRepository<>), typeof (Repository<>));
-            services.AddScoped<IDataService<LiteForumDbContext, Post>, PostService> ();
-            services.AddScoped<IDataService<LiteForumDbContext, Comment>, CommentService> ();
-            services.AddScoped<IDataService<LiteForumDbContext, Reply>, ReplyService> ();
-            services.AddScoped<IDataService<LiteForumDbContext, Category>, CategoryService> ();
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IDataService<LiteForumDbContext, Post>, PostService>();
+            services.AddScoped<IDataService<LiteForumDbContext, Comment>, CommentService>();
+            services.AddScoped<IDataService<LiteForumDbContext, Reply>, ReplyService>();
+            services.AddScoped<IDataService<LiteForumDbContext, Category>, CategoryService>();
 
-            services.AddMvc ();
+            services.AddMvc(config => {
+                config.Filters.Add(typeof(LiteForumExceptionFilter));
+            });
 
             // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles (configuration => {
+            services.AddSpaStaticFiles(configuration =>
+            {
                 configuration.RootPath = "ClientApp/dist";
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure (IApplicationBuilder app, IHostingEnvironment env, IServiceProvider provider) {
-            if (env.IsDevelopment ()) {
-                app.UseDeveloperExceptionPage ();
-            } else {
-                app.UseExceptionHandler ("/Home/Error");
-                app.UseHsts ();
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider provider)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
 
-            app.UseHttpsRedirection ();
-            app.UseStaticFiles ();
-            app.UseSpaStaticFiles ();
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
 
-            app.UseMvc (routes => {
-                routes.MapRoute (
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
 
-            app.UseSpa (spa => {
+            app.UseSpa(spa =>
+            {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
                 // see https://go.microsoft.com/fwlink/?linkid=864501
 
                 spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment ()) {
-                    spa.UseAngularCliServer (npmScript: "start");
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
                 }
             });
 
-            StartupHelper.CreateRolesAndAdminUser (provider, Configuration).Wait ();
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory> ().CreateScope ()) {
-                serviceScope.ServiceProvider.GetService<LiteForumDbContext> ().Database.Migrate ();
-                serviceScope.ServiceProvider.GetService<LiteForumDbContext> ().EnsureSeeded (Configuration).Wait ();
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                StartupHelper.CreateRolesAndAdminUser(serviceScope.ServiceProvider, Configuration).Wait();
+                serviceScope.ServiceProvider.GetService<LiteForumDbContext>().Database.Migrate();
+                serviceScope.ServiceProvider.GetService<LiteForumDbContext>().EnsureSeeded(Configuration).Wait();
             }
         }
     }
