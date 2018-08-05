@@ -13,9 +13,7 @@ using LiteForum.ViewModels;
 
 namespace LiteForum.Controllers.API
 {
-    [Authorize(policy: "Authenticated")]
     [Route("api/[controller]")]
-    [ApiController]
     public class CategoryController : BaseApiController
     {
         private readonly ILogger<CategoryController> _logger;
@@ -58,7 +56,7 @@ namespace LiteForum.Controllers.API
         }
 
         [HttpPut]
-        [Authorize(policy: AppConstants.Roles.Admin)]
+        [Authorize(policy: AppConstants.String.Roles.Admin)]
         public async Task<IActionResult> Update([FromBody]CategoryVModel category)
         {
             var oldCategory = await _categories.GetByIdAsync(category.Id);
@@ -70,7 +68,7 @@ namespace LiteForum.Controllers.API
         }
 
         [HttpDelete("{id}")]
-        [Authorize(policy: AppConstants.Roles.Admin)]
+        [Authorize(policy: AppConstants.String.Roles.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
             var category = await _categories.GetByIdAsync(id);

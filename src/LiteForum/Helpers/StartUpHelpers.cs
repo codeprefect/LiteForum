@@ -6,7 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using LiteForum.Models;
 
-namespace LiteForum.Helpers {
+namespace LiteForum.Helpers
+{
     public static class StartupHelper
     {
         private static RoleManager<IdentityRole> _roleManager;
@@ -27,7 +28,7 @@ namespace LiteForum.Helpers {
         private static async Task CreateRoles()
         {
             //adding customs roles
-            string[] roleNames = { AppConstants.Roles.Admin, AppConstants.Roles.Member };
+            string[] roleNames = { AppConstants.String.Roles.Admin, AppConstants.String.Roles.Member };
             IdentityResult roleResult;
 
             foreach (var roleName in roleNames)
@@ -58,8 +59,8 @@ namespace LiteForum.Helpers {
                 var createAdminUser = await _userManager.CreateAsync(adminUser, userPassword);
                 if (createAdminUser.Succeeded)
                 {
-                    //here we tie the new user to the "Admin" role 
-                    await _userManager.AddToRoleAsync(adminUser, AppConstants.Roles.Admin);
+                    //here we tie the new user to the "Admin" role
+                    await _userManager.AddToRoleAsync(adminUser, AppConstants.String.Roles.Admin);
                 }
             }
         }

@@ -44,7 +44,7 @@ namespace LiteForum
 
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = "Identity.Application";
+                options.DefaultAuthenticateScheme = AppConstants.String.AuthSchemes.Identity;
             }).ConfigureJwtAuth(Configuration);
 
             services.ConfigureApplicationCookie(options =>
@@ -71,16 +71,18 @@ namespace LiteForum
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Authenticated", policy =>
+                options.AddPolicy(AppConstants.String.Policies.Authenticated, policy =>
                 {
-                    policy.AddAuthenticationSchemes("Identity.Application", "JwtBearer")
+                    policy.AddAuthenticationSchemes(
+                        AppConstants.String.AuthSchemes.Identity,
+                        AppConstants.String.AuthSchemes.JwtBearer)
                         .RequireAuthenticatedUser()
                         .Build();
                 });
 
-                options.AddPolicy(AppConstants.Roles.Admin, policy =>
+                options.AddPolicy(AppConstants.String.Policies.Admin, policy =>
                 {
-                    policy.RequireRole(AppConstants.Roles.Admin)
+                    policy.RequireRole(AppConstants.String.Roles.Admin)
                         .RequireAuthenticatedUser()
                         .Build();
                 });
@@ -92,7 +94,8 @@ namespace LiteForum
             services.AddScoped<IDataService<LiteForumDbContext, Reply>, ReplyService>();
             services.AddScoped<IDataService<LiteForumDbContext, Category>, CategoryService>();
 
-            services.AddMvc(config => {
+            services.AddMvc(config =>
+            {
                 config.Filters.Add(typeof(LiteForumExceptionFilter));
             });
 
@@ -104,7 +107,7 @@ namespace LiteForum
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider provider)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {

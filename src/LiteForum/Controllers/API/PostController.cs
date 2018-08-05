@@ -13,9 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LiteForum.Controllers.API
 {
-    [Authorize(policy: "Authenticated")]
     [Route("api/[controller]")]
-    [ApiController]
     public class PostController : BaseApiController
     {
         private readonly ILogger<PostController> _logger;

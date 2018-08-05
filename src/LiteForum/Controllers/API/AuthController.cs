@@ -45,11 +45,12 @@ namespace LiteForum.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation("User created a new account with password.");
-                await _userManager.AddToRoleAsync(user, AppConstants.Roles.Member); // add user to default member role
+                await _userManager.AddToRoleAsync(user, AppConstants.String.Roles.Member); // add user to default member role
 
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 _logger.LogInformation("User created a new account with password.");
-                return Ok(new {
+                return Ok(new
+                {
                     username = user.UserName,
                     email = user.Email,
                     status = "successfull"
@@ -91,7 +92,8 @@ namespace LiteForum.Controllers
             });
         }
 
-        private async Task<List<Claim>> GetValidClaims(LiteForumUser user) {
+        private async Task<List<Claim>> GetValidClaims(LiteForumUser user)
+        {
             IdentityOptions _options = new IdentityOptions();
             var claims = new List<Claim>
             {
@@ -126,7 +128,8 @@ namespace LiteForum.Controllers
                                new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero))
                               .TotalSeconds);
 
-        private void AddErrors(IdentityResult result) {
+        private void AddErrors(IdentityResult result)
+        {
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
