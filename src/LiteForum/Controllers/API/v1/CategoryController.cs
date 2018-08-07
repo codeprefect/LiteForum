@@ -11,10 +11,10 @@ using LiteForum.Models;
 using LiteForum.Services.Interfaces;
 using LiteForum.ViewModels;
 
-namespace LiteForum.Controllers.API
+namespace LiteForum.Controllers.API.v1
 {
-    [Route("api/[controller]")]
-    public class CategoryController : BaseApiController
+    [Route("api/v{api-version:apiVersion}/[controller]")]
+    public class CategoryController : BaseV1ApiController
     {
         private readonly ILogger<CategoryController> _logger;
         private readonly IDataService<LiteForumDbContext, Category> _categories;

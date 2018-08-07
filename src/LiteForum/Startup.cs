@@ -19,6 +19,12 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Swagger;
+using System.Reflection;
+using System.IO;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using SwashbuckleAspNetVersioningShim;
 
 namespace LiteForum
 {
@@ -97,6 +103,20 @@ namespace LiteForum
             services.AddMvc(config =>
             {
                 config.Filters.Add(typeof(LiteForumExceptionFilter));
+                //config.UseCentralRoutePrefix(new RouteAttribute("api/v{version}"));
+            }).AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
+
+            services.AddMvcCore().AddVersionedApiExplorer();
+            services.AddApiVersioning();//options => options.ReportApiVersions = true);
+            services.AddSwaggerGen(
+            options =>
+            {
+                var provider = services.BuildServiceProvider()
+                            .GetRequiredService<IApiVersionDescriptionProvider>();
+                options.ConfigureSwaggerVersions(provider, "LiteForum API Documentation v{0}");
             });
 
             // In production, the Angular files will be served from this directory
@@ -107,7 +127,7 @@ namespace LiteForum
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider apiVersionProvider)
         {
             if (env.IsDevelopment())
             {
@@ -130,6 +150,17 @@ namespace LiteForum
                     template: "{controller}/{action=Index}/{id?}");
             });
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.ConfigureSwaggerVersions(apiVersionProvider, new SwaggerVersionOptions
+                {
+                    DescriptionTemplate = "Version {0} docs",
+                    RouteTemplate = "/swagger/{0}/swagger.json",
+                });
+                c.RoutePrefix = "docs";
+            });
+
             app.UseSpa(spa =>
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
@@ -145,8 +176,8 @@ namespace LiteForum
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                StartupHelper.CreateRolesAndAdminUser(serviceScope.ServiceProvider, Configuration).Wait();
                 serviceScope.ServiceProvider.GetService<LiteForumDbContext>().Database.Migrate();
+                StartupHelper.CreateRolesAndAdminUser(serviceScope.ServiceProvider, Configuration).Wait();
                 serviceScope.ServiceProvider.GetService<LiteForumDbContext>().EnsureSeeded(Configuration).Wait();
             }
         }

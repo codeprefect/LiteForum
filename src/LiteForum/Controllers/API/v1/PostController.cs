@@ -11,10 +11,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace LiteForum.Controllers.API
+namespace LiteForum.Controllers.API.v1
 {
-    [Route("api/[controller]")]
-    public class PostController : BaseApiController
+    [Route("api/v{api-version:apiVersion}/[controller]")]
+    public class PostController : BaseV1ApiController
     {
         private readonly ILogger<PostController> _logger;
         private readonly IDataService<LiteForumDbContext, Post> _posts;
@@ -79,9 +79,5 @@ namespace LiteForum.Controllers.API
             _logger.LogInformation($"User: {UserId} deleted his post with id: {id}");
             return Ok(new LiteForumResponseMessage(200, "deleted successfully"));
         }
-
-        #region Helpers
-        private const string userMismatchMessage = "post was authored by another user.";
-        #endregion
     }
 }

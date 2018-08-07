@@ -11,10 +11,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace LiteForum.Controllers.API
+namespace LiteForum.Controllers.API.v1
 {
-    [Route("api/post/{postId}/[controller]")]
-    public class CommentController : BaseApiController
+    [Route("api/v{api-version:apiVersion}/post/{postId}/[controller]")]
+    public class CommentController : BaseV1ApiController
     {
         private readonly ILogger<CommentController> _logger;
         private readonly IDataService<LiteForumDbContext, Comment> _comments;
@@ -63,7 +63,7 @@ namespace LiteForum.Controllers.API
         {
             var oldComment = await _comments.GetByIdAsync(comment.Id);
             if (oldComment.UserId != UserId) throw new UnauthorizedAccessException(userMismatchMessage);
-            if (oldComment.PostId != postId) throw new AccessViolationException(postMismatchMessage);
+            if (oldComment.PostId != postId) throw new AccessViolationException(resourceMismatchMessage);
             oldComment.Content = comment.Content;
             _comments.Update(oldComment, UserId);
             await _comments.SaveAsync();
@@ -76,16 +76,11 @@ namespace LiteForum.Controllers.API
         {
             var comment = await _comments.GetByIdAsync(id);
             if (comment.UserId != UserId) throw new UnauthorizedAccessException(userMismatchMessage);
-            if (comment.PostId != postId) throw new AccessViolationException(postMismatchMessage);
+            if (comment.PostId != postId) throw new AccessViolationException(resourceMismatchMessage);
             _comments.Delete(id);
             await _comments.SaveAsync();
             _logger.LogInformation($"User: {UserId} deleted his comment with id: {id}");
             return Ok(new LiteForumResponseMessage(200, "deleted successfully"));
         }
-
-        #region Helpers
-        private const string userMismatchMessage = "comment was authored by another user.";
-        private const string postMismatchMessage = "comment does not belong to the specified post.";
-        #endregion
     }
 }

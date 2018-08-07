@@ -11,10 +11,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace LiteForum.Controllers.API
+namespace LiteForum.Controllers.API.v1
 {
-    [Route("api/comment/{commentId}/[controller]")]
-    public class ReplyController : BaseApiController
+    [Route("api/v{api-version:apiVersion}/comment/{commentId}/[controller]")]
+    public class ReplyController : BaseV1ApiController
     {
         private readonly ILogger<ReplyController> _logger;
         private readonly IDataService<LiteForumDbContext, Reply> _replies;
@@ -60,7 +60,7 @@ namespace LiteForum.Controllers.API
         {
             var oldReply = await _replies.GetByIdAsync(reply.Id);
             if (oldReply.UserId != UserId) throw new UnauthorizedAccessException(userMismatchMessage);
-            if (oldReply.CommentId != commentId) throw new AccessViolationException(commentMismatchMessage);
+            if (oldReply.CommentId != commentId) throw new AccessViolationException(resourceMismatchMessage);
 
             oldReply.Content = reply.Content;
             oldReply = _replies.Update(oldReply, UserId);
@@ -74,16 +74,11 @@ namespace LiteForum.Controllers.API
         {
             var reply = await _replies.GetByIdAsync(id);
             if (reply.UserId != UserId) throw new UnauthorizedAccessException(userMismatchMessage);
-            if (reply.CommentId != commentId) throw new Exception(commentMismatchMessage);
+            if (reply.CommentId != commentId) throw new Exception(resourceMismatchMessage);
             _replies.Delete(id);
             await _replies.SaveAsync();
             _logger.LogInformation($"User: {UserId} deleted his reply with id: {id}");
             return Ok(reply.ToVModel());
         }
-
-        #region Helpers
-        private const string userMismatchMessage = "reply was authored by another user.";
-        private const string commentMismatchMessage = "reply does not belong to the specified comment.";
-        #endregion
     }
 }
