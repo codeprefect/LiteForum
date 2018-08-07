@@ -111,8 +111,7 @@ namespace LiteForum
 
             services.AddMvcCore().AddVersionedApiExplorer();
             services.AddApiVersioning();//options => options.ReportApiVersions = true);
-            services.AddSwaggerGen(
-            options =>
+            services.AddSwaggerGen(options =>
             {
                 var provider = services.BuildServiceProvider()
                             .GetRequiredService<IApiVersionDescriptionProvider>();
@@ -127,7 +126,8 @@ namespace LiteForum
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider apiVersionProvider)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
+            IApiVersionDescriptionProvider apiVersionProvider)
         {
             if (env.IsDevelopment())
             {
