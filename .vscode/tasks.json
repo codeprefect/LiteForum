@@ -56,19 +56,85 @@
             ]
         },
         {
-            "type": "npm",
-            "script": "build",
-            "path": "src/LiteForum/ClientApp/",
+            "label": "run published",
+            "command": "dotnet",
+            "args": [
+                "exec",
+                "LiteForum.dll"
+            ],
+            "options": {
+                "env": {
+                    "ASPNETCORE_ENVIRONMENT": "Production"
+                },
+                "cwd": "production"
+            },
             "problemMatcher": [
-                "$eslint-compact"
+                "$msCompile"
             ]
         },
         {
-            "type": "npm",
-            "script": "build:ssr",
-            "path": "src/LiteForum/ClientApp/",
+            "label": "ui_build",
+            "command": "yarn",
+            "args": [
+                "build"
+            ],
+            "options" : {
+                "cwd": "src/LiteForum_UI"
+            },
             "problemMatcher": [
-                "$eslint-stylish"
+                "$tslint5"
+            ]
+        },
+        {
+            "label": "ui_build:ssr",
+            "command": "yarn",
+            "args": [
+                "build:ssr"
+            ],
+            "options" : {
+                "cwd": "src/LiteForum_UI"
+            },
+            "problemMatcher": [
+                "$tslint5"
+            ]
+        },
+        {
+            "label": "ui_install",
+            "command": "yarn",
+            "args": [
+                "install"
+            ],
+            "options" : {
+                "cwd": "src/LiteForum_UI"
+            },
+            "problemMatcher": [
+                "$tslint5"
+            ]
+        },
+        {
+            "label": "ui_test",
+            "command": "yarn",
+            "args": [
+                "test"
+            ],
+            "options" : {
+                "cwd": "src/LiteForum_UI"
+            },
+            "problemMatcher": [
+                "$tslint5"
+            ]
+        },
+        {
+            "label": "ui_e2e",
+            "command": "yarn",
+            "args": [
+                "e2e"
+            ],
+            "options" : {
+                "cwd": "src/LiteForum_UI"
+            },
+            "problemMatcher": [
+                "$tslint5"
             ]
         }
     ]

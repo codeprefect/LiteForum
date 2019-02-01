@@ -314,4 +314,8 @@ OpenCover/
 *.Development.*
 *.min.*
 **/[Pp]roduction
-
+**/cypress/integration/examples/
+**/cypress/videos/
+**/cypress/screenshots/
+*.DS_Store
+**/coverage/

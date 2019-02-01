@@ -121,7 +121,7 @@ namespace LiteForum
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "ClientApp/dist";
+                configuration.RootPath = "LiteForum_UI/dist";
             });
         }
 
@@ -166,7 +166,7 @@ namespace LiteForum
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
                 // see https://go.microsoft.com/fwlink/?linkid=864501
 
-                spa.Options.SourcePath = "ClientApp";
+                spa.Options.SourcePath = "../LiteForum_UI";
 
                 if (env.IsDevelopment())
                 {
@@ -178,7 +178,9 @@ namespace LiteForum
             {
                 serviceScope.ServiceProvider.GetService<LiteForumDbContext>().Database.Migrate();
                 StartupHelper.CreateRolesAndAdminUser(serviceScope.ServiceProvider, Configuration).Wait();
-                serviceScope.ServiceProvider.GetService<LiteForumDbContext>().EnsureSeeded(Configuration).Wait();
+                if (env.IsTest()) {
+                    serviceScope.ServiceProvider.GetService<LiteForumDbContext>().EnsureSeeded(Configuration).Wait();
+                }
             }
         }
     }

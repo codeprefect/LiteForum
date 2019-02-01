@@ -64,5 +64,9 @@ namespace LiteForum.Helpers
                 }
             }
         }
+
+        public static bool IsTest(this Microsoft.AspNetCore.Hosting.IHostingEnvironment env) {
+            return env.EnvironmentName.ToLower() == "test";
+        }
     }
 }
