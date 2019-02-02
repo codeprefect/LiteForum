@@ -15,16 +15,18 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
-using System.Reflection;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using SwashbuckleAspNetVersioningShim;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.Net.Mime;
+using LiteForum_UI;
+using Microsoft.AspNetCore.Blazor.Server;
 
 namespace LiteForum
 {
@@ -110,6 +112,16 @@ namespace LiteForum
             });
 
             services.AddMvcCore().AddVersionedApiExplorer();
+
+            services.AddResponseCompression(options =>
+            {
+                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
+                {
+                    MediaTypeNames.Application.Octet,
+                    WasmMediaTypeNames.Application.Wasm,
+                });
+            });
+
             services.AddApiVersioning();//options => options.ReportApiVersions = true);
             services.AddSwaggerGen(options =>
             {
@@ -117,18 +129,14 @@ namespace LiteForum
                             .GetRequiredService<IApiVersionDescriptionProvider>();
                 options.ConfigureSwaggerVersions(provider, "LiteForum API Documentation v{0}");
             });
-
-            // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "LiteForum_UI/dist";
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
             IApiVersionDescriptionProvider apiVersionProvider)
         {
+            app.UseResponseCompression();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -141,7 +149,6 @@ namespace LiteForum
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
 
             app.UseMvc(routes =>
             {
@@ -161,18 +168,7 @@ namespace LiteForum
                 c.RoutePrefix = "docs";
             });
 
-            app.UseSpa(spa =>
-            {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
-                spa.Options.SourcePath = "../LiteForum_UI";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
-            });
+            app.UseBlazor<LiteForum_UI.Startup>();
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {

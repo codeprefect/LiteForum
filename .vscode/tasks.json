@@ -73,68 +73,16 @@
             ]
         },
         {
-            "label": "ui_build",
-            "command": "yarn",
+            "label": "ui_restore",
+            "command": "dotnet",
             "args": [
-                "build"
+                "restore"
             ],
             "options" : {
                 "cwd": "src/LiteForum_UI"
             },
             "problemMatcher": [
-                "$tslint5"
-            ]
-        },
-        {
-            "label": "ui_build:ssr",
-            "command": "yarn",
-            "args": [
-                "build:ssr"
-            ],
-            "options" : {
-                "cwd": "src/LiteForum_UI"
-            },
-            "problemMatcher": [
-                "$tslint5"
-            ]
-        },
-        {
-            "label": "ui_install",
-            "command": "yarn",
-            "args": [
-                "install"
-            ],
-            "options" : {
-                "cwd": "src/LiteForum_UI"
-            },
-            "problemMatcher": [
-                "$tslint5"
-            ]
-        },
-        {
-            "label": "ui_test",
-            "command": "yarn",
-            "args": [
-                "test"
-            ],
-            "options" : {
-                "cwd": "src/LiteForum_UI"
-            },
-            "problemMatcher": [
-                "$tslint5"
-            ]
-        },
-        {
-            "label": "ui_e2e",
-            "command": "yarn",
-            "args": [
-                "e2e"
-            ],
-            "options" : {
-                "cwd": "src/LiteForum_UI"
-            },
-            "problemMatcher": [
-                "$tslint5"
+                "$msCompile"
             ]
         }
     ]
