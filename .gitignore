@@ -319,3 +319,4 @@ OpenCover/
 **/cypress/screenshots/
 *.DS_Store
 **/coverage/
+**/angular-ui

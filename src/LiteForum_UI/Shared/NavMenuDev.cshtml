@@ -1,0 +1,55 @@
+﻿<nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top">
+    <a class="navbar-brand" href="/">LiteForum</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            @if(!isLoggedIn()) {
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/login">
+                        <button class="btn btn-success my-2 my-sm-0">
+                            <span class="oi oi-plus" aria-hidden="true"></span>&nbsp; Login
+                        </button>
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/register">
+                        <button class="btn btn-primary my-2 my-sm-0">
+                            <span class="oi oi-plus" aria-hidden="true"></span>&nbsp; Register
+                        </button>
+                    </NavLink>
+                </li>
+            } else {
+                <li class="nav-item">
+                    <a onclick=@logout class="nav-link">
+                        <button class="btn btn-danger log">Log out &nbsp;<span class='oi oi-plus'></span></button>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</nav>
+
+@functions {
+    bool collapseNavMenu = true;
+    bool loggedIn = true;
+
+    void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    bool isLoggedIn()
+    {
+        return loggedIn;
+    }
+
+    void logout() {
+        loggedIn = false;
+    }
+
+    void login() {
+        loggedIn = true;
+    }
+}
