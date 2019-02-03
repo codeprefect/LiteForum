@@ -26,4 +26,8 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 	</PropertyGroup>
+
+  <ItemGroup>
+      <Watch Include="..\LiteForum_UI\**\*.cshtml;..\LiteForum_UI\**\*.cs;..\LiteForum_UI\**\*.css" />
+  </ItemGroup>
 </Project>

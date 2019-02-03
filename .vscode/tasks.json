@@ -23,7 +23,10 @@
             "args": [
                 "run"
             ],
-            "group": "test",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
             "problemMatcher": "$msCompile"
         },
         {
