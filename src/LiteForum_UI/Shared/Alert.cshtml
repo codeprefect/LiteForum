@@ -1,0 +1,38 @@
+@using Microsoft.Extensions.Logging
+
+@inject AlertService alertService
+@implements IDisposable
+
+@if(alerts != null && alerts.Any()) {
+  foreach (var item in alerts)
+  {
+    <div class="alert @item.GetAlertTypeClass() alert-dismissible fade show" role="alert">
+      <button type="button" class="close" aria-label="Close" onclick="@(() => RemoveAlert(item))">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>@item.message</strong>
+    </div>
+  }
+}
+
+@functions {
+  List<AlertMessage> alerts;
+  protected override void OnInit()
+  {
+    this.alertService.AlertReceived += DisplayAlert;
+    this.alerts = new List<AlertMessage>();
+  }
+
+  public void DisplayAlert(object sender, AlertMessage e) {
+    if(e != null) {
+      this.alerts.Add(e);
+      this.StateHasChanged(); // triggers update of component props
+    }
+  }
+
+  public void RemoveAlert(AlertMessage alert) => alerts.Remove(alert);
+
+  public void Dispose() {
+    this.alertService.AlertReceived -= DisplayAlert;
+  }
+}
