@@ -10,7 +10,7 @@ namespace LiteForum_UI
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<AlertService>();
+            services.AddSingleton<IAlertService, AlertService>();
             services.AddLogging(builder => builder
                 .AddBrowserConsole() // Add Blazor.Extensions.Logging.BrowserConsoleLogger
                 .SetMinimumLevel(LogLevel.Trace)

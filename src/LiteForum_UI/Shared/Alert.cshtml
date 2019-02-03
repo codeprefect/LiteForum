@@ -1,7 +1,4 @@
-@using Microsoft.Extensions.Logging
-
-@inject AlertService alertService
-@implements IDisposable
+@inherits AlertBase
 
 @if(alerts != null && alerts.Any()) {
   foreach (var item in alerts)
@@ -12,30 +9,5 @@
       </button>
       <strong>@item.Message</strong>
     </div>
-  }
-}
-
-@functions {
-  List<AlertMessage> alerts;
-  protected override void OnInit()
-  {
-    this.alertService.AlertReceived += this.UpdateAlerts;
-    this.alerts = new List<AlertMessage>();
-  }
-
-  public void UpdateAlerts(object sender, AlertMessage e) {
-    if(e != null) {
-      this.alerts.Add(e);
-    } else {
-      this.alerts.RemoveAll(t => !t.PersistOnRouteChange);
-      // route has changed removed non persisted alerts
-    }
-    this.StateHasChanged(); // triggers update of component props
-  }
-
-  public void RemoveAlert(AlertMessage alert) => alerts.Remove(alert);
-
-  public void Dispose() {
-    this.alertService.AlertReceived -= this.UpdateAlerts;
   }
 }

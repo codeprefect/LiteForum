@@ -5,16 +5,16 @@ using System;
 
 namespace LiteForum_UI.Services
 {
-    public class AlertService : IDisposable
+    public class AlertService : IAlertService, IDisposable
     {
-        public IUriHelper _uriHelper { get; }
+        protected IUriHelper _uriHelper { get; }
 
-        public event EventHandler<AlertMessage> AlertReceived;
+        private event EventHandler<AlertMessage> AlertReceived;
 
         public AlertService(IUriHelper uriHelper)
         {
-            _uriHelper = uriHelper;
-            _uriHelper.OnLocationChanged += this.OnLocationChanges;
+            this._uriHelper = uriHelper;
+            this._uriHelper.OnLocationChanged += this.OnLocationChanges;
         }
 
         public void OnLocationChanges(object sender, string location) => this.OnAlertReceived(); // trigger to remove stale alerts
@@ -35,7 +35,17 @@ namespace LiteForum_UI.Services
 
         public void Dispose()
         {
-            _uriHelper.OnLocationChanged -= this.OnLocationChanges;
+            this._uriHelper.OnLocationChanged -= this.OnLocationChanges;
+        }
+
+        public void AddAlertReceivedHandler(EventHandler<AlertMessage> handler)
+        {
+            this.AlertReceived += handler;
+        }
+
+        public void RemoveAlertReceivedHandler(EventHandler<AlertMessage> handler)
+        {
+            this.AlertReceived -= handler;
         }
     }
 }
