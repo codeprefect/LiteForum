@@ -1,35 +1,57 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">LiteForum_UI</a>
-    <button class="navbar-toggler" onclick=@ToggleNavMenu>
+﻿<nav class="navbar navbar-expand-sm navbar-light bg-light fixed-top main-nav">
+    <a class="navbar-brand logo" href="/">LiteForum</a>
+    <button class="navbar-toggler d-lg-none" type="button" aria-controls="collapsibleNavId"
+        aria-expanded="false" aria-label="Toggle navigation"
+        onclick=@ToggleNavMenu>
         <span class="navbar-toggler-icon"></span>
     </button>
-</div>
-
-<div class=@(collapseNavMenu ? "collapse" : null) onclick=@ToggleNavMenu>
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match=NavLinkMatch.All>
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
-</div>
+    <div class=@(collapseNavMenu ? "collapse navbar-collapse" : "navbar-collapse") onclick=@ToggleNavMenu>
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+            @if(!isLoggedIn()) {
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="login">
+                        <button class="btn btn-success my-2 my-sm-0">
+                            <span class="oi oi-plus" aria-hidden="true"></span>&nbsp; Login
+                        </button>
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="register">
+                        <button class="btn btn-primary my-2 my-sm-0">
+                            <span class="oi oi-plus" aria-hidden="true"></span>&nbsp; Register
+                        </button>
+                    </NavLink>
+                </li>
+            } else {
+                <li class="nav-item">
+                    <a onclick=@logout class="nav-link">
+                        <button class="btn btn-danger log">Log out &nbsp;<span class='oi oi-plus'></span></button>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</nav>
 
 @functions {
     bool collapseNavMenu = true;
+    bool loggedIn = true;
 
     void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    bool isLoggedIn()
+    {
+        return loggedIn;
+    }
+
+    void logout() {
+        loggedIn = false;
+    }
+
+    void login() {
+        loggedIn = true;
     }
 }
