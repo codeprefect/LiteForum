@@ -1,7 +1,5 @@
 ﻿@page "/"
-@using Microsoft.Extensions.Logging
 @inject AlertService alertService
-@inject Microsoft.AspNetCore.Blazor.Services.IUriHelper uriHelper
 
 <h1>Hello, world!</h1>
 Welcome to your new app.
@@ -9,17 +7,17 @@ Welcome to your new app.
 <div class="row">
   <button type="button" class="btn btn-danger" onclick=@showError>Error</button>
   <button type="button" class="btn btn-success" onclick=@showSuccess>Success</button>
-  <button type="button" class="btn btn-warning" onclick=@showWarning>Error</button>
+  <button type="button" class="btn btn-warning" onclick=@showWarning>Warning</button>
+
+
+  <p class="navbar-text pull-right">
+    <a href="/counter" class="navbar-link">Links</a>
+  </p>
+
 </div>
 
 @functions {
-  void showError() {
-    alertService.Error("This is an error", true);
-    uriHelper.NavigateTo("counter");
-  }
-  void showSuccess() {
-    alertService.Success("This is a success");
-    uriHelper.NavigateTo("counter");
-  }
-  void showWarning() => alertService.Warning("This is a warning");
+  void showError() => alertService.Error("This is an error", true);
+  void showSuccess() => alertService.Success("This is a success");
+  void showWarning() => alertService.Warning("This is a warning", true);
 }

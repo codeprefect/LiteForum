@@ -10,7 +10,7 @@
       <button type="button" class="close" aria-label="Close" onclick="@(() => RemoveAlert(item))">
         <span aria-hidden="true">&times;</span>
       </button>
-      <strong>@item.message</strong>
+      <strong>@item.Message</strong>
     </div>
   }
 }
@@ -19,20 +19,23 @@
   List<AlertMessage> alerts;
   protected override void OnInit()
   {
-    this.alertService.AlertReceived += DisplayAlert;
+    this.alertService.AlertReceived += this.UpdateAlerts;
     this.alerts = new List<AlertMessage>();
   }
 
-  public void DisplayAlert(object sender, AlertMessage e) {
+  public void UpdateAlerts(object sender, AlertMessage e) {
     if(e != null) {
       this.alerts.Add(e);
-      this.StateHasChanged(); // triggers update of component props
+    } else {
+      this.alerts.RemoveAll(t => !t.PersistOnRouteChange);
+      // route has changed removed non persisted alerts
     }
+    this.StateHasChanged(); // triggers update of component props
   }
 
   public void RemoveAlert(AlertMessage alert) => alerts.Remove(alert);
 
   public void Dispose() {
-    this.alertService.AlertReceived -= DisplayAlert;
+    this.alertService.AlertReceived -= this.UpdateAlerts;
   }
 }

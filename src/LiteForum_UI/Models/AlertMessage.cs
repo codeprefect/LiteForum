@@ -5,23 +5,26 @@ namespace LiteForum_UI.Models
 {
   public class AlertMessage : EventArgs
   {
-    public readonly AlertType type;
+    public readonly AlertType Type;
 
-    public string message { get; }
+    public readonly string Message;
+
+    public readonly bool PersistOnRouteChange;
 
     public AlertMessage() {}
 
-    public AlertMessage(AlertType alertType, string message)
+    public AlertMessage(AlertType alertType, string message, bool persistOnRouteChange = false)
     {
-      this.type = alertType;
-      this.message = message;
+      this.Type = alertType;
+      this.Message = message;
+      this.PersistOnRouteChange = persistOnRouteChange;
     }
 
-    public override string ToString() => $"Type: {this.type}\nMessage: {this.message}";
+    public override string ToString() => $"\nType: {this.Type}\nMessage: {this.Message}\nPersistOnRouteChange: {this.PersistOnRouteChange}";
 
-    public bool IsSuccess() => this.type == AlertType.Success;
-    public bool IsWarning() => this.type == AlertType.Warning;
-    public bool IsError() => this.type == AlertType.Error;
+    public bool IsSuccess() => this.Type == AlertType.Success;
+    public bool IsWarning() => this.Type == AlertType.Warning;
+    public bool IsError() => this.Type == AlertType.Error;
   }
 
   public enum AlertType
