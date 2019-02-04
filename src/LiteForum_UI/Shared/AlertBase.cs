@@ -7,17 +7,18 @@ using System;
 
 namespace LiteForum_UI.Shared {
   public class AlertBase : BlazorComponent, IDisposable {
+    private IDisposable alertObservable;
     public List<AlertMessage> alerts;
 
     [Inject]
     protected IAlertService alertService { get; set; }
     protected override void OnInit()
     {
-      this.alertService.AddAlertReceivedHandler(this.UpdateAlerts);
+      alertObservable = this.alertService.GetAlertObservable().Subscribe(this.UpdateAlerts);
       this.alerts = new List<AlertMessage>();
     }
 
-    public void UpdateAlerts(object sender, AlertMessage e) {
+    public void UpdateAlerts(AlertMessage e) {
       if(e != null) {
         this.alerts.Add(e);
       } else {
@@ -30,7 +31,7 @@ namespace LiteForum_UI.Shared {
     public void RemoveAlert(AlertMessage alert) => alerts.Remove(alert);
 
     public void Dispose() {
-      this.alertService.RemoveAlertReceivedHandler(this.UpdateAlerts);
+      alertObservable.Dispose();
     }
   }
 }
