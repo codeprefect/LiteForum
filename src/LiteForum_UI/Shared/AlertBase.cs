@@ -21,8 +21,9 @@ namespace LiteForum_UI.Shared {
     public void UpdateAlerts(AlertMessage e) {
       if(e != null) {
         this.alerts.Add(e);
+        this.RemoveStaleAlert(e);
       } else {
-        // route has changed removed non persisted alerts
+          // route has changed removed non persisted alerts
         this.alerts.RemoveAll(t => !t.PersistOnRouteChange);
       }
       this.StateHasChanged(); // triggers update of component props
@@ -32,6 +33,16 @@ namespace LiteForum_UI.Shared {
 
     public void Dispose() {
       alertObservable.Dispose();
+    }
+
+    public void RemoveStaleAlert(AlertMessage alert) {
+      int persistInMinutes = alert.IsSuccess() ? 1
+        : (alert.IsWarning() ? 3
+        : (alert.IsError() ? 10 : 0));
+      Task.Delay(persistInMinutes * 1000 * 60).ContinueWith(_ => {
+        this.RemoveAlert(alert);
+        this.StateHasChanged(); // triggers update of component props
+      });
     }
   }
 }
