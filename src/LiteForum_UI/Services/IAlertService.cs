@@ -7,6 +7,7 @@ namespace LiteForum_UI.Services {
       void Success(string message, bool keepAfterNavChange = false);
       void Warning(string message, bool keepAfterNavChange = false);
       void Error(string message, bool keepAfterNavChange = false);
-      IObservable<AlertMessage> GetAlertObservable();
+      void AddAlertReceivedHandler(EventHandler<AlertMessage> handler);
+      void RemoveAlertReceivedHandler(EventHandler<AlertMessage> handler);
   }
 }

@@ -15,16 +15,16 @@ namespace LiteForum_UI.Models
 
     public AlertMessage(AlertType alertType, string message, bool persistOnRouteChange = false)
     {
-      this.Type = alertType;
-      this.Message = message;
-      this.PersistOnRouteChange = persistOnRouteChange;
+      Type = alertType;
+      Message = message;
+      PersistOnRouteChange = persistOnRouteChange;
     }
 
-    public override string ToString() => $"\nType: {this.Type}\nMessage: {this.Message}\nPersistOnRouteChange: {this.PersistOnRouteChange}";
+    public override string ToString() => $"\nType: {Type}\nMessage: {Message}\nPersistOnRouteChange: {PersistOnRouteChange}";
 
-    public bool IsSuccess() => this.Type == AlertType.Success;
-    public bool IsWarning() => this.Type == AlertType.Warning;
-    public bool IsError() => this.Type == AlertType.Error;
+    public bool IsSuccess() => Type == AlertType.Success;
+    public bool IsWarning() => Type == AlertType.Warning;
+    public bool IsError() => Type == AlertType.Error;
   }
 
   public enum AlertType

@@ -26,7 +26,7 @@
 
 .body-content {
   padding-top: 100px;
-  background: linear-gradient(to right, rgba(209, 146, 185, 0.9), rgb(187, 198, 228));
+  background: linear-gradient(to right, #d192b9f3, rgb(187, 198, 228));
 }
 
 li .glyphicon {

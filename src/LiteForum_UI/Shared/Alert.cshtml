@@ -1,7 +1,7 @@
 @inherits AlertBase
 
-@if(alerts != null && alerts.Any()) {
-  foreach (var item in alerts)
+@if(Alerts != null && Alerts.Any()) {
+  foreach (var item in Alerts)
   {
     <div class="alert @item.GetAlertTypeClass() alert-dismissible fade show" role="alert">
       <button type="button" class="close" aria-label="Close" onclick="@(() => RemoveAlert(item))">
