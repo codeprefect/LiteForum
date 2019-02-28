@@ -36,6 +36,11 @@ namespace LiteForum.Controllers
             _config = config;
         }
 
+        /// <summary>
+        /// create a new user account
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterVModel model)

@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -13,24 +11,25 @@ using LiteForum.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using Swashbuckle.AspNetCore.Swagger;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using SwashbuckleAspNetVersioningShim;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.Net.Mime;
-using LiteForum_UI;
 using Microsoft.AspNetCore.Blazor.Server;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.PlatformAbstractions;
+using System.Reflection;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.Extensions.Options;
 
 namespace LiteForum
 {
-    public class Startup
+  public class Startup
     {
         private readonly IConfiguration Configuration;
         public Startup(IConfiguration configuration)
@@ -105,13 +104,35 @@ namespace LiteForum
             services.AddMvc(config =>
             {
                 config.Filters.Add(typeof(LiteForumExceptionFilter));
-                //config.UseCentralRoutePrefix(new RouteAttribute("api/v{version}"));
             }).AddJsonOptions(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
-            services.AddMvcCore().AddVersionedApiExplorer();
+            services.AddApiVersioning(options => {
+                options.ReportApiVersions = true;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+            });
+
+            services.AddVersionedApiExplorer(options =>
+            {
+                // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+                // note: the specified format code will format the version as "'v'major[.minor][-status]"
+                options.GroupNameFormat = "'v'VVV";
+
+                // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+                // can also be used to control the format of the API version in route templates
+                options.SubstituteApiVersionInUrl = true;
+            });
+
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
+            services.AddSwaggerGen(options =>
+            {
+                options.OperationFilter<SwaggerDefaultValues>();
+                options.IncludeXmlComments(XmlCommentsFilePath);
+            });
 
             services.AddResponseCompression(options =>
             {
@@ -120,14 +141,6 @@ namespace LiteForum
                     MediaTypeNames.Application.Octet,
                     WasmMediaTypeNames.Application.Wasm,
                 });
-            });
-
-            services.AddApiVersioning();//options => options.ReportApiVersions = true);
-            services.AddSwaggerGen(options =>
-            {
-                var provider = services.BuildServiceProvider()
-                            .GetRequiredService<IApiVersionDescriptionProvider>();
-                options.ConfigureSwaggerVersions(provider, "LiteForum API Documentation v{0}");
             });
         }
 
@@ -158,14 +171,17 @@ namespace LiteForum
             });
 
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
+
+            app.UseSwaggerUI(options =>
             {
-                c.ConfigureSwaggerVersions(apiVersionProvider, new SwaggerVersionOptions
+                options.RoutePrefix = "docs";
+                // build a swagger endpoint for each discovered API version
+                foreach ( var description in apiVersionProvider.ApiVersionDescriptions )
                 {
-                    DescriptionTemplate = "Version {0} docs",
-                    RouteTemplate = "/swagger/{0}/swagger.json",
-                });
-                c.RoutePrefix = "docs";
+                    options.SwaggerEndpoint(
+                        $"/swagger/{description.GroupName}/swagger.json",
+                        description.GroupName.ToUpperInvariant());
+                }
             });
 
             app.UseBlazor<LiteForum_UI.Startup>();
@@ -177,6 +193,16 @@ namespace LiteForum
                 if (env.IsTest()) {
                     serviceScope.ServiceProvider.GetService<LiteForumDbContext>().EnsureSeeded(Configuration).Wait();
                 }
+            }
+        }
+
+        static string XmlCommentsFilePath
+        {
+            get
+            {
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var fileName = typeof( Startup ).GetTypeInfo().Assembly.GetName().Name + ".xml";
+                return Path.Combine( basePath, fileName );
             }
         }
     }
