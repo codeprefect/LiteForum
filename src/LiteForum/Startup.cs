@@ -1,41 +1,44 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
-using CP.Repositories.Interfaces;
-using CP.Repositories;
-using LiteForum.Entities.Models;
-using LiteForum.Helpers;
-using LiteForum.Models;
-using LiteForum.Services;
-using LiteForum.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using System.IO;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.ResponseCompression;
-using System.Net.Mime;
-using Microsoft.AspNetCore.Blazor.Server;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.PlatformAbstractions;
-using System.Reflection;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.PlatformAbstractions;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using CP.Repositories.Interfaces;
+using CP.Repositories;
+using LiteForum.Services.Interfaces;
+using LiteForum.Services;
+using LiteForum.Entities.Models;
+using LiteForum.Models;
+using LiteForum.Helpers;
+using LiteForum_UI;
+
 
 namespace LiteForum
 {
-  public class Startup
+    public class Startup
     {
-        private readonly IConfiguration Configuration;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
+
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -53,28 +56,6 @@ namespace LiteForum
             {
                 options.DefaultAuthenticateScheme = AppConstants.String.AuthSchemes.Identity;
             }).ConfigureJwtAuth(Configuration);
-
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Cookie.Name = "AuthCookie";
-                options.Cookie.Path = "/";
-                options.Cookie.HttpOnly = false;
-                options.Cookie.SameSite = SameSiteMode.Lax;
-                options.SlidingExpiration = true;
-                options.Events.OnRedirectToLogin = async ctx =>
-                {
-                    if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
-                    {
-                        ctx.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                    }
-                    else
-                    {
-                        ctx.Response.Redirect(ctx.RedirectUri);
-                    }
-
-                    await Task.Yield();
-                };
-            });
 
             services.AddAuthorization(options =>
             {
@@ -104,10 +85,7 @@ namespace LiteForum
             services.AddMvc(config =>
             {
                 config.Filters.Add(typeof(LiteForumExceptionFilter));
-            }).AddJsonOptions(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            });
+            }).AddNewtonsoftJson();
 
             services.AddApiVersioning(options => {
                 options.ReportApiVersions = true;
@@ -134,18 +112,15 @@ namespace LiteForum
                 options.IncludeXmlComments(XmlCommentsFilePath);
             });
 
-            services.AddResponseCompression(options =>
+            services.AddResponseCompression(opts =>
             {
-                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
-                {
-                    MediaTypeNames.Application.Octet,
-                    WasmMediaTypeNames.Application.Wasm,
-                });
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
             IApiVersionDescriptionProvider apiVersionProvider)
         {
             app.UseResponseCompression();
@@ -153,10 +128,11 @@ namespace LiteForum
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseBlazorDebugging();
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -165,9 +141,7 @@ namespace LiteForum
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                routes.MapRoute(name: "default", template: "{controller}/{action}/{id?}");
             });
 
             app.UseSwagger();
@@ -185,6 +159,9 @@ namespace LiteForum
             });
 
             app.UseBlazor<LiteForum_UI.Startup>();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {

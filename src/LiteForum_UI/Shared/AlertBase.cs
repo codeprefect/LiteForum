@@ -1,21 +1,17 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Blazor.Components;
+using Microsoft.AspNetCore.Components;
 using LiteForum_UI.Services;
 using LiteForum_UI.Models;
 using System;
 using Microsoft.JSInterop;
-using Microsoft.Extensions.Logging;
 
 namespace LiteForum_UI.Shared {
-  public class AlertBase : BlazorComponent, IDisposable {
+  public class AlertBase : ComponentBase, IDisposable {
     public List<AlertMessage> Alerts;
 
     [Inject]
     protected IAlertService alertService { get; set; }
-
-    [Inject]
-    private ILogger<AlertBase> _logger { get; set; }
 
     protected override void OnInit()
     {
@@ -25,7 +21,7 @@ namespace LiteForum_UI.Shared {
 
     public void UpdateAlerts(object sender, AlertMessage e) {
       if(e != null) {
-        Alerts.Add(e);
+        Alerts.Insert(0, e);
         RemoveOnExpiry(e);
       } else {
           // route has changed removed non persisted alerts

@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Blazor.Routing;
-using Microsoft.AspNetCore.Blazor.Services;
+using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Components.Services;
 using LiteForum_UI.Models;
 using System;
 

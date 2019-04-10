@@ -1,8 +1,6 @@
-using Blazor.Extensions.Logging;
-using LiteForum_UI.Services;
-using Microsoft.AspNetCore.Blazor.Builder;
+using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using LiteForum_UI.Services;
 
 namespace LiteForum_UI
 {
@@ -11,13 +9,9 @@ namespace LiteForum_UI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IAlertService, AlertService>();
-            services.AddLogging(builder => builder
-                .AddBrowserConsole() // Add Blazor.Extensions.Logging.BrowserConsoleLogger
-                .SetMinimumLevel(LogLevel.Trace)
-            );
         }
 
-        public void Configure(IBlazorApplicationBuilder app)
+        public void Configure(IComponentsApplicationBuilder app)
         {
             app.AddComponent<App>("app");
         }

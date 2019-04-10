@@ -22,10 +22,10 @@ namespace LiteForum.Helpers
 
     public class LiteForumExceptionFilter : ExceptionFilterAttribute
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly ILogger<Exception> _logger;
 
-        public LiteForumExceptionFilter(IHostingEnvironment hostingEnvironment, ILogger<Exception> logger)
+        public LiteForumExceptionFilter(IWebHostEnvironment hostingEnvironment, ILogger<Exception> logger)
         {
             _hostingEnvironment = hostingEnvironment;
             _logger = logger;
