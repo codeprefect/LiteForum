@@ -13,7 +13,7 @@ namespace LiteForum_UI.Shared {
     [Inject]
     protected IAlertService alertService { get; set; }
 
-    protected override void OnInit()
+    protected override void OnInitialized()
     {
       alertService.AddAlertReceivedHandler(UpdateAlerts);
       Alerts = new List<AlertMessage>();

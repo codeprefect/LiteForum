@@ -1,22 +1,22 @@
-using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.AspNetCore.Components.Services;
+using Microsoft.AspNetCore.Components;
 using LiteForum_UI.Models;
 using System;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace LiteForum_UI.Services
 {
     public class AlertService : IAlertService, IDisposable
     {
-        protected IUriHelper _uriHelper { get; }
+        protected NavigationManager _navigationManager { get; }
         protected EventHandler<AlertMessage> AlertReceived { get; set; }
 
-        public AlertService(IUriHelper uriHelper)
+        public AlertService(NavigationManager navManager)
         {
-            _uriHelper = uriHelper;
-            _uriHelper.OnLocationChanged += OnLocationChanges;
+            _navigationManager = navManager;
+            _navigationManager.LocationChanged += OnLocationChanges;
         }
 
-        public void OnLocationChanges(object sender, string location) => AlertReceived.Invoke(this, null); // trigger to remove stale alerts
+        public void OnLocationChanges(object sender, LocationChangedEventArgs args) => AlertReceived.Invoke(this, null); // trigger to remove stale alerts
 
         public void Success(string message, bool keepAfterNavChange = false) =>
             AlertReceived.Invoke(this, new AlertMessage(AlertType.Success, message, keepAfterNavChange));
@@ -34,7 +34,7 @@ namespace LiteForum_UI.Services
 
         public void Dispose()
         {
-            _uriHelper.OnLocationChanged -= OnLocationChanges;
+            _navigationManager.LocationChanged -= OnLocationChanges;
         }
 
         public void AddAlertReceivedHandler(EventHandler<AlertMessage> handler) => AlertReceived += handler;

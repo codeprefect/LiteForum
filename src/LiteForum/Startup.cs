@@ -146,17 +146,17 @@ namespace LiteForum
 
             app.UseSwagger();
 
-            app.UseSwaggerUI(options =>
-            {
-                options.RoutePrefix = "docs";
-                // build a swagger endpoint for each discovered API version
-                foreach ( var description in apiVersionProvider.ApiVersionDescriptions )
-                {
-                    options.SwaggerEndpoint(
-                        $"/swagger/{description.GroupName}/swagger.json",
-                        description.GroupName.ToUpperInvariant());
-                }
-            });
+            // app.UseSwaggerUI(options =>
+            // {
+            //     options.RoutePrefix = "docs";
+            //     // build a swagger endpoint for each discovered API version
+            //     foreach ( var description in apiVersionProvider.ApiVersionDescriptions )
+            //     {
+            //         options.SwaggerEndpoint(
+            //             $"/swagger/{description.GroupName}/swagger.json",
+            //             description.GroupName.ToUpperInvariant());
+            //     }
+            // });
 
             app.UseBlazor<LiteForum_UI.Startup>();
 

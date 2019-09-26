@@ -4,7 +4,7 @@
   foreach (var item in Alerts)
   {
     <div class="alert @item.GetAlertTypeClass() alert-dismissible fade show" role="alert">
-      <button type="button" class="close" aria-label="Close" onclick="@(() => RemoveAlert(item))">
+      <button type="button" class="close" aria-label="Close" @onclick="(() => RemoveAlert(item))">
         <span aria-hidden="true">&times;</span>
       </button>
       <strong>@item.Message</strong>
